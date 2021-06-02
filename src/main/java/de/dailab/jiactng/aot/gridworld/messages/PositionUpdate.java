@@ -12,8 +12,8 @@ public class PositionUpdate extends GameMessage {
     /** the ID of the order
      public String orderId; */
 
-    /** the ID of the worker */
-    public String workerId;
+    /** the AgentID of the worker */
+    public String workerAgentId;
 
     /** whether the worker accepted taking the order
      public Result state; */
@@ -23,7 +23,7 @@ public class PositionUpdate extends GameMessage {
 
     @Override
     public String toString() {
-        return String.format("PositionMessage(game=%d, workerId=%s, position=%s)", gameId, workerId, position);
+        return String.format("PositionMessage(game=%d, workerId=%s, position=%s)", gameId, workerAgentId, position);
     }
 
 }

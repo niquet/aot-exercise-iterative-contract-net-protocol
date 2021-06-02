@@ -9,11 +9,11 @@ public class PositionMessage extends GameMessage {
 
     private static final long serialVersionUID = -2183024630466982177L;
 
-    /** the ID of the order
+    /** the AgentID of the order
     public String orderId; */
 
     /** the ID of the worker */
-    public String workerId;
+    public String workerAgentId;
 
     /** whether the worker accepted taking the order
     public Result state; */
@@ -21,12 +21,12 @@ public class PositionMessage extends GameMessage {
     /** the Position of the worker */
     public Position position;
 
-    /** the Id of the worker */
-    public String workerIdForServer;
+    /** the Id of the worker for the server */
+    public String workerId;
 
     @Override
     public String toString() {
-        return String.format("PositionMessage(game=%d, workerId=%s, position=%s)", gameId, workerId, position, workerIdForServer);
+        return String.format("PositionMessage(game=%d, workerId=%s, position=%s)", gameId, workerAgentId, position, workerId);
     }
 
 }

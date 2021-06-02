@@ -1,11 +1,11 @@
 package de.dailab.jiactng.aot.gridworld.messages;
 
 /**
- * Sent from Broker to Worker to indicate where the worker currently is positioned.
+ * Sent from Worker to Broker to indicate where the worker currently is positioned.
  */
-public class PositionConfirm extends GameMessage {
+public class ACOConfirm extends GameMessage {
 
-    private static final long serialVersionUID = 2829240620247919469L;
+    private static final long serialVersionUID = -3900206571778413868L;
 
     /** the ID of the order
      public String orderId; */
