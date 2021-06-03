@@ -9,10 +9,7 @@ import de.dailab.jiactng.agentcore.knowledge.IFact;
 import de.dailab.jiactng.agentcore.ontology.AgentDescription;
 import de.dailab.jiactng.agentcore.ontology.IAgentDescription;
 import de.dailab.jiactng.aot.gridworld.messages.*;
-import de.dailab.jiactng.aot.gridworld.model.GridworldGame;
-import de.dailab.jiactng.aot.gridworld.model.Position;
-import de.dailab.jiactng.aot.gridworld.model.Worker;
-import de.dailab.jiactng.aot.gridworld.model.WorkerInformation;
+import de.dailab.jiactng.aot.gridworld.model.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -37,10 +34,14 @@ public class BrokerBean extends AbstractAgentBean {
 	private Boolean isGameStarted = false;
 	/* Here are values that need to be remembered for future decisions */
 	private Integer maximumNumberOfAgents = null;
+	private Integer time = 0;
 	/* Here are data structures that hold complex information */
 	private GridworldGame gridworldGame = null;
 	private List<Worker> initialWorkers = null;
 	private Map<String, WorkerInformation> workerInformationList = new HashMap<>();
+	private List<Order> currentOrders = null;
+	// OrderId, zugehöriges, bestes Angebot
+	private Map<String, AuctionResponse> bestOffers = new HashMap<>();
 
 	@Override
 	public void doStart() throws Exception {
@@ -164,6 +165,78 @@ public class BrokerBean extends AbstractAgentBean {
 
 			}
 
+			// if new order arrives
+			if(payload instanceof OrderMessage){
+				OrderMessage orderMessage = (OrderMessage) message.getPayload();
+				currentOrders.add(orderMessage.order);
+				// übrige Annahmezeit bis verfall speichern
+				// jede Runde: Orders in Liste Kontrollieren, ggf. Deadlines ändern
+				// start ggf. neue Auktion -> Turnpenalty, deadline, profit berücksichtigen, evtl. auch andere Orders
+
+				// TODO aktuell senden wir immer eine start auction message, mit der unveränderten deadline
+				AuctionMessage startAuction = new AuctionMessage();
+				startAuction.orderId = orderMessage.order.id;
+				startAuction.deadline =  orderMessage.order.deadline;
+				startAuction.orderPosition =  orderMessage.order.position;
+				for (Worker worker:initialWorkers) {
+					sendMessage(workerInformationList.get(worker.id).agentDescription.getMessageBoxAddress(), startAuction);
+				}
+
+			}
+
+			if (payload instanceof AuctionResponse){
+				// angebote kommen an
+
+				AuctionResponse response = (AuctionResponse) message.getPayload();
+
+				// wenn order von einem Worker nicht angenommen wird
+				if(response.status == Result.FAIL){
+					//server deadline, kein anderer kann die Order mehr übernehmen
+					// TODO Wenn die Zeit vorbei is wollen wir immer verfallen lassen, oder den Worker mit bestem Angebot zuweisen
+
+					for (Order order : currentOrders) {
+						if(response.orderId == order.id){
+							if(time - order.created > 2 && bestOffers.get(response.orderId) != null){
+								// notify Server
+								TakeOrderMessage takeOrder = new TakeOrderMessage();
+								takeOrder.orderId = response.orderId;
+								takeOrder.brokerId = thisAgent.getAgentId();
+								sendMessage(server, takeOrder);
+								// TODO Aufgabe an den Worker mit aktuell bestem Offer geben
+								// TODO ggf. modifikator an deadline anbringen
+								AssignOrderMessage assignOrder = new AssignOrderMessage();
+								assignOrder.order = order;
+								assignOrder.server = this.server;
+								assignOrder.gameId = this.gameId;
+								// an worker mit bestem angebot
+								sendMessage(bestOffers.get(order.id).sender, assignOrder);
+
+							}
+						}
+					}
+
+					continue;
+				}
+
+				if(bestOffers.get(response.orderId) == null ||response.deadlineOffer < bestOffers.get(response.orderId).deadlineOffer){
+					bestOffers.put(response.orderId, response);
+				}
+				// auswerten:
+				// will ich die Auktion fortführen
+				// 3 Runden Zeit vom Server, reward  max(value - (turnCompleted - turnCreated) * turnPenalty, 0), wenn reward 0, auktion ende
+				// wenn alle ablehnen, takeordermsg mit fail
+				// wann wird takeordermsg an server gesendet?
+				// nach takeorderconfirm ausgewählten worker benachrichtigen
+
+
+
+				if(bestOffers.get(response.orderId) == null){
+
+				}else{
+
+				}
+			}
+
 			/* TODO other message formats required for the iterative net protocol */
 
 			if (payload instanceof EndGameMessage) {
@@ -175,8 +248,10 @@ public class BrokerBean extends AbstractAgentBean {
 			}
 
 		}
-
+	time ++;
+	// letzte Klammer vom execute
 	}
+
 
 	/** example function for using getAgentNode() and retrieving a list of all worker agents */
 	private List<IAgentDescription> getMyWorkerAgents(int maxNum) {
