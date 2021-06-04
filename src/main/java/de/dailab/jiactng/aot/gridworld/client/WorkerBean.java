@@ -115,7 +115,20 @@ public class WorkerBean extends AbstractAgentBean {
 				Object payload = message.getPayload();
 
 				if (payload instanceof ACOMessage){
+					/** Initialize position and stuff */
+					ACOMessage acoMessage = (ACOMessage) message.getPayload();
+					workerIdForServer = acoMessage.workerId;
+					position = acoMessage.position;
+					gameId = acoMessage.gameId;
+					broker = message.getSender();
+					/* TODO Spielfeld initialisieren, obstacles und andere Worker speichern? */
 
+					ACOConfirm acoConfirm = new ACOConfirm();
+					acoConfirm.state = Result.SUCCESS;
+					acoConfirm.workerAgentId = thisAgent.getAgentId();
+					acoConfirm.gameId = gameId;
+
+					sendMessage(broker, acoConfirm);
 				}
 
 				if (payload instanceof AssignOrderMessage) {
@@ -129,37 +142,25 @@ public class WorkerBean extends AbstractAgentBean {
 					Order order = assignOrderMessage.order;
 					ICommunicationAddress server = assignOrderMessage.server;
 
-					//TODO position nicht notwendig?? Ändern!
-					if (position != null) {
-						//Map<Order, ICommunicationAddress> orderWithServer = new HashMap<>();
+					AssignOrderConfirm assignOrderConfirm = new AssignOrderConfirm();
+					assignOrderConfirm.orderId = order.id;
+					assignOrderConfirm.gameId = assignOrderMessage.gameId;
+					assignOrderConfirm.workerId = thisAgent.getAgentId();
+					assignOrderConfirm.state = Result.FAIL;
 
-						// TODO do something / evaluate
+					orderToAddress.put(order, server);
+					priorityQueue.add(order);
+					assignOrderConfirm.state = Result.SUCCESS;
 
-						AssignOrderConfirm assignOrderConfirm = new AssignOrderConfirm();
-						assignOrderConfirm.orderId = order.id;
-						assignOrderConfirm.gameId = assignOrderMessage.gameId;
-						assignOrderConfirm.workerId = thisAgent.getAgentId();
-						assignOrderConfirm.state = Result.FAIL;
-
-						//TODO is it possible for us to complete this order - Funktion erstellen mit der man Priority Queue neu evaluiert
-						//if(possibleEnd(order.position) < order.deadline) {
-						orderToAddress.put(order, server);
-						//currentOrders.put(order.id, order);
-						priorityQueue.add(order);
-						//orderQueue.push(order.id);
-						assignOrderConfirm.state = Result.SUCCESS;
-						//}
-
-						if (priorityQueue.contains(order) && handleOrder == null) handleOrder = order;
-						sendMessage(broker, assignOrderConfirm);
-					}
+					if (priorityQueue.contains(order) && handleOrder == null) handleOrder = order;
+					sendMessage(broker, assignOrderConfirm);
 				}
 
+				/* TODO brauchen wir das überhaupt noch?? */
 				if (payload instanceof PositionMessage) {
 					/** Order to assign to the agent */
 
 					PositionMessage positionMessage = (PositionMessage) message.getPayload();
-
 
 					ICommunicationAddress brokerAddress = message.getSender();
 					broker = brokerAddress;
@@ -186,16 +187,15 @@ public class WorkerBean extends AbstractAgentBean {
 					 */
 					if(position == null || workerIdForServer == null) {
 						position = positionMessage.position;
-						workerIdForServer = positionMessage.workerIdForServer;
+						workerIdForServer = positionMessage.workerAgentId;
 					}
-
 
 					/**
 					 *
 					 * DEBUGGING
 					 *
 					 */
-					//System.out.println("WORKER RECEIVED " + positionMessage.toString());
+
 					log.info("WORKER RECEIVED " + positionMessage.toString());
 
 				}
@@ -227,16 +227,6 @@ public class WorkerBean extends AbstractAgentBean {
 						lastMoveFailed = false;
 					}
 				}
-
-				/*if (payload instanceof OrderCompleted){
-					// TODO if FAIL anders reagieren?
-					if(((OrderCompleted) payload).state == Result.SUCCESS){
-					priorityQueue.poll();
-					System.out.println("SUCCESS " + handleOrder);
-					handleOrder = priorityQueue.peek();
-					hasArrivedAtTarget = false;
-					}
-				}*/
 
 			}
 		}
