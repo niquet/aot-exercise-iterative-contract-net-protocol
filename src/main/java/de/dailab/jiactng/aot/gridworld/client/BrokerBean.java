@@ -12,7 +12,6 @@ import de.dailab.jiactng.aot.gridworld.messages.*;
 import de.dailab.jiactng.aot.gridworld.model.*;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,8 +38,8 @@ public class BrokerBean extends AbstractAgentBean {
 	private GridworldGame gridworldGame = null;
 	private List<Worker> initialWorkers = null;
 	private Map<String, WorkerInformation> workerInformationList = new HashMap<>();
+	/* OrderId, zugehöriges, bestes Angebot */
 	private List<Order> currentOrders = null;
-	// OrderId, zugehöriges, bestes Angebot
 	private Map<String, AuctionResponse> bestOffers = new HashMap<>();
 
 	@Override
@@ -169,8 +168,6 @@ public class BrokerBean extends AbstractAgentBean {
 			if(payload instanceof OrderMessage){
 				OrderMessage orderMessage = (OrderMessage) message.getPayload();
 				currentOrders.add(orderMessage.order);
-				// übrige Annahmezeit bis verfall speichern
-				// jede Runde: Orders in Liste Kontrollieren, ggf. Deadlines ändern
 				// start ggf. neue Auktion -> Turnpenalty, deadline, profit berücksichtigen, evtl. auch andere Orders
 
 				// TODO aktuell senden wir immer eine start auction message, mit der unveränderten deadline
@@ -181,60 +178,49 @@ public class BrokerBean extends AbstractAgentBean {
 				for (Worker worker:initialWorkers) {
 					sendMessage(workerInformationList.get(worker.id).agentDescription.getMessageBoxAddress(), startAuction);
 				}
-
+				// TODO ggf. modifikator an deadline anbringen -> zweites Angebot an Auction Response anbinden
 			}
 
 			if (payload instanceof AuctionResponse){
-				// angebote kommen an
+				/* Worker Angebote kommen an */
 
 				AuctionResponse response = (AuctionResponse) message.getPayload();
 
-				// wenn order von einem Worker nicht angenommen wird
-				if(response.status == Result.FAIL){
-					//server deadline, kein anderer kann die Order mehr übernehmen
-					// TODO Wenn die Zeit vorbei is wollen wir immer verfallen lassen, oder den Worker mit bestem Angebot zuweisen
-
-					for (Order order : currentOrders) {
-						if(response.orderId == order.id){
-							if(time - order.created > 2 && bestOffers.get(response.orderId) != null){
-								// notify Server
-								TakeOrderMessage takeOrder = new TakeOrderMessage();
-								takeOrder.orderId = response.orderId;
-								takeOrder.brokerId = thisAgent.getAgentId();
-								sendMessage(server, takeOrder);
-								// TODO Aufgabe an den Worker mit aktuell bestem Offer geben
-								// TODO ggf. modifikator an deadline anbringen
-								AssignOrderMessage assignOrder = new AssignOrderMessage();
-								assignOrder.order = order;
-								assignOrder.server = this.server;
-								assignOrder.gameId = this.gameId;
-								// an worker mit bestem angebot
-								sendMessage(bestOffers.get(order.id).sender, assignOrder);
-
-							}
-						}
+				/* Wenn Angebot eingeht, mit bisherigem BestOffer vergleichen */
+				if(response.status == Result.SUCCESS) {
+					if (bestOffers.get(response.orderId) == null || response.deadlineOffer < bestOffers.get(response.orderId).deadlineOffer) {
+						bestOffers.put(response.orderId, response);
 					}
-
-					continue;
 				}
 
-				if(bestOffers.get(response.orderId) == null ||response.deadlineOffer < bestOffers.get(response.orderId).deadlineOffer){
-					bestOffers.put(response.orderId, response);
+				/* server deadline, wenn die Zeit vorbei is wollen wir immer verfallen lassen, oder den Worker mit bestem Angebot zuweisen */
+				for (Order order : currentOrders) {
+					if(response.orderId.equals(order.id)) {
+						acceptProposal(order);
+						break;
+					}
+					/* Vielleicht durch alle Order durchgehen, um sicherzustellen, dass sie auch bearbeitet werden.
+					Wie distanzieren zwischen assigned orders und neuen orders??
+
+					if(time - order.created > 2){
+						acceptProposal(order);
+						break;
+					} */
 				}
-				// auswerten:
-				// will ich die Auktion fortführen
-				// 3 Runden Zeit vom Server, reward  max(value - (turnCompleted - turnCreated) * turnPenalty, 0), wenn reward 0, auktion ende
-				// wenn alle ablehnen, takeordermsg mit fail
-				// wann wird takeordermsg an server gesendet?
-				// nach takeorderconfirm ausgewählten worker benachrichtigen
 
+				/* Auswerten:
+				- will ich die Auktion fortführen
+				- 3 Runden Zeit vom Server, reward  max(value - (turnCompleted - turnCreated) * turnPenalty, 0), wenn reward 0, auktion ende */
 
+			}
 
-				if(bestOffers.get(response.orderId) == null){
+			/* TODO müssen wir diese Nachricht berücksichtigen? */
+			if(payload instanceof AssignOrderConfirm){
+				AssignOrderConfirm orderConfirm = (AssignOrderConfirm) message.getPayload();
 
-				}else{
+				if(orderConfirm.state == Result.FAIL) System.out.println("Order wurde nicht angenommen!");
 
-				}
+				/* TODO Zuweisung Order, Worker */
 			}
 
 			/* TODO other message formats required for the iterative net protocol */
@@ -250,6 +236,29 @@ public class BrokerBean extends AbstractAgentBean {
 		}
 	time ++;
 	// letzte Klammer vom execute
+	}
+
+	/** Nach Zeit Ablauf dem besten Worker den Order schicken */
+	private void acceptProposal(Order order) {
+		if (time - order.created > 2) {
+			if (bestOffers.get(order.id) != null) {
+				// notify Server
+				TakeOrderMessage takeOrder = new TakeOrderMessage();
+				takeOrder.orderId = order.id;
+				takeOrder.brokerId = thisAgent.getAgentId();
+				sendMessage(server, takeOrder);
+				// Aufgabe an den Worker mit aktuell bestem Offer geben
+				AssignOrderMessage assignOrder = new AssignOrderMessage();
+				assignOrder.order = order;
+				assignOrder.server = this.server;
+				assignOrder.gameId = this.gameId;
+				// an worker mit bestem angebot
+				sendMessage(bestOffers.get(order.id).sender, assignOrder);
+			} else {
+				/* Order für uns nicht machbar, aus Liste löschen und nicht darauf antworten */
+				currentOrders.remove(order);
+			}
+		}
 	}
 
 
