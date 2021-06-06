@@ -55,13 +55,10 @@ public class WorkerBean extends AbstractAgentBean {
 	private int time;
 
 
-
-
 	@Override
 	public void doStart() throws Exception {
 		/* TODO */
 	}
-
 
 
 	@Override
@@ -332,5 +329,4 @@ public class WorkerBean extends AbstractAgentBean {
 		if (action == WorkerAction.WEST)  position = new Position(position.x - 1, position.y);
 		if (action == WorkerAction.EAST)  position = new Position(position.x + 1, position.y);
 	}
-
 }

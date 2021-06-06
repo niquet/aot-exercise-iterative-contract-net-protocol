@@ -12,6 +12,7 @@ import de.dailab.jiactng.aot.gridworld.messages.*;
 import de.dailab.jiactng.aot.gridworld.model.*;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,11 +37,12 @@ public class BrokerBean extends AbstractAgentBean {
 	private Integer time = 0;
 	/* Here are data structures that hold complex information */
 	private GridworldGame gridworldGame = null;
-	private List<Worker> initialWorkers = null;
+	private List<Worker> initialWorkers = new ArrayList<>();
 	private Map<String, WorkerInformation> workerInformationList = new HashMap<>();
 	/* OrderId, zugehöriges, bestes Angebot */
-	private List<Order> currentOrders = null;
+	private List<Order> currentOrders = new ArrayList<>();
 	private Map<String, AuctionResponse> bestOffers = new HashMap<>();
+	private Boolean done = false;
 
 	@Override
 	public void doStart() throws Exception {
@@ -67,7 +69,7 @@ public class BrokerBean extends AbstractAgentBean {
 			if (!isGameStarted) {
 				StartGameMessage startGameMessage = new StartGameMessage();
 				startGameMessage.brokerId = thisAgent.getAgentId();
-				startGameMessage.gridFile = "/grids/04_1.grid";
+				startGameMessage.gridFile = "/grids/example.grid";
 				sendMessage(server, startGameMessage);
 
 				this.isGameStarted = true;
@@ -129,6 +131,19 @@ public class BrokerBean extends AbstractAgentBean {
 
 				}
 
+				done = true;
+
+				/* Geht schöner - nur für funktionalität noch drinnen - abfangen dass worker informationen noch nciht da */
+				for(Order order : currentOrders){
+					for (Worker worker: initialWorkers) {
+						AuctionMessage startAuction = new AuctionMessage();
+						startAuction.orderId = order.id;
+						startAuction.deadline =  order.deadline;
+						startAuction.orderPosition =  order.position;
+						sendMessage(agentDescriptionList.get(initialWorkers.indexOf(worker)).getMessageBoxAddress(), startAuction);
+					}
+				}
+
 				/* TODO iterative Contract Net Protocol call-for-proposals for the orders */
 
 			}
@@ -175,8 +190,10 @@ public class BrokerBean extends AbstractAgentBean {
 				startAuction.orderId = orderMessage.order.id;
 				startAuction.deadline =  orderMessage.order.deadline;
 				startAuction.orderPosition =  orderMessage.order.position;
-				for (Worker worker:initialWorkers) {
-					sendMessage(workerInformationList.get(worker.id).agentDescription.getMessageBoxAddress(), startAuction);
+				if(done) {
+					for (Worker worker : this.initialWorkers) {
+						sendMessage(agentDescriptionList.get(initialWorkers.indexOf(worker)).getMessageBoxAddress(), startAuction);
+					}
 				}
 				// TODO ggf. modifikator an deadline anbringen -> zweites Angebot an Auction Response anbinden
 			}
