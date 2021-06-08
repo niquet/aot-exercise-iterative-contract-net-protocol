@@ -58,6 +58,9 @@ public class WorkerBean extends AbstractAgentBean {
 	@Override
 	public void doStart() throws Exception {
 		/* TODO */
+
+		memory.attach(new MessageObserver(), new JiacMessage());
+
 	}
 
 
@@ -126,13 +129,15 @@ public class WorkerBean extends AbstractAgentBean {
 					acoConfirm.gameId = gameId;
 
 					sendMessage(broker, acoConfirm);
+
+					log.info("WORKER RECEIVED " + acoMessage.toString());
 				}
 
 				if (payload instanceof AssignOrderMessage) {
 					/** Order to assign to the agent */
 					if (gameId == null) gameId = ((AssignOrderMessage) message.getPayload()).gameId;
 
-					ICommunicationAddress broker = message.getSender();
+					//ICommunicationAddress broker = message.getSender();
 
 					AssignOrderMessage assignOrderMessage = (AssignOrderMessage) message.getPayload();
 
@@ -149,7 +154,8 @@ public class WorkerBean extends AbstractAgentBean {
 					priorityQueue.add(order);
 					assignOrderConfirm.state = Result.SUCCESS;
 
-					if (priorityQueue.contains(order) && handleOrder == null) handleOrder = order;
+					if (priorityQueue.contains(order) && handleOrder == null)
+						handleOrder = order;
 					sendMessage(broker, assignOrderConfirm);
 				}
 
@@ -197,6 +203,25 @@ public class WorkerBean extends AbstractAgentBean {
 
 				}
 
+				if(payload instanceof AuctionMessage) {
+
+					AuctionMessage auctionMessage = (AuctionMessage) message.getPayload();
+					broker = message.getSender();
+					if (position != null) {
+						/* Calculated distance, considering already taken Assignments, hier intelligenz einbauen */
+						AuctionResponse auctionResponse = new AuctionResponse();
+						auctionResponse.orderId = auctionMessage.orderId;
+						auctionResponse.gameId = gameId;
+						auctionResponse.sender = thisAgent.getAgentDescription().getMessageBoxAddress();
+						auctionResponse.deadlineOffer = possibleEnd(auctionMessage.orderPosition) + time;
+						if (auctionResponse.deadlineOffer >= auctionMessage.deadline)
+							auctionResponse.status = Result.FAIL;
+						else auctionResponse.status = Result.SUCCESS;
+
+						sendMessage(broker, auctionResponse);
+					}
+				}
+
 				if (payload instanceof WorkerConfirm) {
 
 					WorkerConfirm workerConfirm = (WorkerConfirm) message.getPayload();
@@ -227,6 +252,17 @@ public class WorkerBean extends AbstractAgentBean {
 
 			}
 		}
+	}
+
+	private int possibleEnd(Position target){
+		Position goal = position;
+		int zeit = 0;
+		for (Order order: priorityQueue) {
+			zeit += order.position.distance(goal) + 1;
+			goal = order.position;
+		}
+		zeit += target.distance(goal);
+		return zeit;
 	}
 
 	/** example function to send messages to other agents */

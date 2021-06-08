@@ -133,7 +133,7 @@ public class BrokerBean extends AbstractAgentBean {
 
 				done = true;
 
-				/* Geht schöner - nur für funktionalität noch drinnen - abfangen dass worker informationen noch nciht da */
+				/* Geht schöner - nur für funktionalität noch drinnen - abfangen dass worker informationen noch nicht da */
 				for(Order order : currentOrders){
 					for (Worker worker: initialWorkers) {
 						AuctionMessage startAuction = new AuctionMessage();
@@ -165,9 +165,9 @@ public class BrokerBean extends AbstractAgentBean {
 					acoMessage.size = this.gridworldGame.size;
 					acoMessage.gameId = this.gameId;
 
-					/* TODO why can't we use message.getSender() here? */
-					ICommunicationAddress workerAddress = workerInformation.agentDescription.getMessageBoxAddress();
-					sendMessage(workerAddress, acoMessage);
+					/* TODO why can't we use message.getSender() here? - Seems to work ...*/
+					//ICommunicationAddress workerAddress = workerInformation.agentDescription.getMessageBoxAddress();
+					sendMessage(message.getSender(), acoMessage);
 
 				}
 
@@ -263,6 +263,7 @@ public class BrokerBean extends AbstractAgentBean {
 				TakeOrderMessage takeOrder = new TakeOrderMessage();
 				takeOrder.orderId = order.id;
 				takeOrder.brokerId = thisAgent.getAgentId();
+				takeOrder.gameId = gameId;
 				sendMessage(server, takeOrder);
 				// Aufgabe an den Worker mit aktuell bestem Offer geben
 				AssignOrderMessage assignOrder = new AssignOrderMessage();
@@ -271,6 +272,7 @@ public class BrokerBean extends AbstractAgentBean {
 				assignOrder.gameId = this.gameId;
 				// an worker mit bestem angebot
 				sendMessage(bestOffers.get(order.id).sender, assignOrder);
+				currentOrders.remove(order);
 			} else {
 				/* Order für uns nicht machbar, aus Liste löschen und nicht darauf antworten */
 				currentOrders.remove(order);
