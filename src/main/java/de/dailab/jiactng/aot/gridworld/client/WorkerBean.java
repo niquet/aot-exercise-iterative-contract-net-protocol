@@ -178,6 +178,23 @@ public class WorkerBean extends AbstractAgentBean {
 					}
 				}
 
+				if(payload instanceof DefinitivBidMessage){
+					DefinitivBidMessage bid = (DefinitivBidMessage) message.getPayload();
+
+					DefinitivBidMessage answer = new DefinitivBidMessage();
+					answer.orderId = bid.orderId;
+					answer.deadlineOffer = bid.deadlineOffer;
+					answer.status = Result.SUCCESS;
+					if(bid.deadlineOffer < possibleEnd(bid.orderPosition)) answer.status = Result.FAIL;
+
+					sendMessage(broker, answer);
+				}
+
+				if(payload instanceof DefinitivRejectMessage){
+					DefinitivRejectMessage reject = (DefinitivRejectMessage) message.getPayload();
+					if(priorityQueue.contains(reject.order)) priorityQueue.remove(reject.order);
+				}
+
 				if (payload instanceof WorkerConfirm) {
 
 					WorkerConfirm workerConfirm = (WorkerConfirm) message.getPayload();

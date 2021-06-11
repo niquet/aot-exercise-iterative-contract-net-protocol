@@ -42,6 +42,7 @@ public class BrokerBean extends AbstractAgentBean {
 	/* OrderId, zugehöriges, bestes Angebot */
 	private List<Order> currentOrders = new ArrayList<>();
 	private Map<String, AuctionResponse> bestOffers = new HashMap<>();
+	private Map<String, Order> Orders = new HashMap<>();
 	private Boolean done = false;
 
 	@Override
@@ -203,19 +204,29 @@ public class BrokerBean extends AbstractAgentBean {
 
 				AuctionResponse response = (AuctionResponse) message.getPayload();
 
-				/* TODO Warten bis alle Order raus */
 				/* Wenn Angebot eingeht, mit bisherigem BestOffer vergleichen */
 				if(response.status == Result.SUCCESS) {
-					if (bestOffers.get(response.orderId) == null || response.deadlineOffer < bestOffers.get(response.orderId).deadlineOffer) {
-						bestOffers.put(response.orderId, response);
+					if(Orders.get(response.orderId).value - response.deadlineOffer * Orders.get(response.orderId).turnPenalty > 0) {
+						if (bestOffers.get(response.orderId) == null || response.deadlineOffer < bestOffers.get(response.orderId).deadlineOffer) {
+							bestOffers.put(response.orderId, response);
+							DefinitivBidMessage bidMessage = new DefinitivBidMessage();
+							bidMessage.orderId = response.orderId;
+							bidMessage.deadlineOffer = response.deadlineOffer;
+							sendMessage(response.sender, bidMessage);
+						} else {
+							AuctionMessage startAuction = new AuctionMessage();
+							startAuction.orderId = response.orderId;
+							startAuction.deadline = Orders.get(response.orderId).deadline;
+						}
 					}
-					/*
-					TODO: Hier Nachricht erneut senden mit verändertem Proposal. Vielleicht besten Worker abfangen falls raus...
-					 */
+				} else {
+					DefinitivRejectMessage rejectMessage = new DefinitivRejectMessage();
+					rejectMessage.orderId = response.orderId;
+					sendMessage(response.sender, rejectMessage);
 				}
 
 				/* TODO öfters proposen, proposal verändern ? */
-				/* TODO if proposal Result FAIL reject message schicken! */
+
 				/* server deadline, wenn die Zeit vorbei is wollen wir immer verfallen lassen, oder den Worker mit bestem Angebot zuweisen */
 				for (Order order : currentOrders) {
 					if(response.orderId.equals(order.id)) {
@@ -233,7 +244,19 @@ public class BrokerBean extends AbstractAgentBean {
 
 			}
 
-			/* TODO müssen wir diese Nachricht berücksichtigen? */
+			if(payload instanceof DefinitivBidMessage){
+				DefinitivBidMessage bid = (DefinitivBidMessage) message.getPayload();
+
+				if(bid.status == Result.SUCCESS){
+					Orders.get(bid.orderId).deadline = bid.deadlineOffer;
+				} else {
+					bestOffers.remove(bid.orderId);
+					AuctionMessage startAuction = new AuctionMessage();
+					startAuction.orderId = bid.orderId;
+					startAuction.deadline = Orders.get(bid.orderId).deadline;
+				}
+			}
+
 			if(payload instanceof AssignOrderConfirm){
 				AssignOrderConfirm orderConfirm = (AssignOrderConfirm) message.getPayload();
 
@@ -241,8 +264,6 @@ public class BrokerBean extends AbstractAgentBean {
 
 				/* TODO Zuweisung Order, Worker */
 			}
-
-			/* TODO other message formats required for the iterative net protocol */
 
 			if (payload instanceof EndGameMessage) {
 
@@ -274,10 +295,21 @@ public class BrokerBean extends AbstractAgentBean {
 				assignOrder.gameId = this.gameId;
 				// an worker mit bestem angebot
 				sendMessage(bestOffers.get(order.id).sender, assignOrder);
-				/* TODO: Reject an restliche Broker schicken !!! */
+				for (Worker worker: initialWorkers) {
+					if(!workerInformationList.get(worker.id).agentDescription.getMessageBoxAddress().equals(bestOffers.get(order.id).sender)){
+						DefinitivRejectMessage rejectMessage = new DefinitivRejectMessage();
+						rejectMessage.orderId = order.id;
+						sendMessage(workerInformationList.get(worker.id).agentDescription.getMessageBoxAddress(), rejectMessage);
+					}
+				}
 				currentOrders.remove(order);
 			} else {
 				/* Order für uns nicht machbar, aus Liste löschen und nicht darauf antworten */
+				for (Worker worker: initialWorkers) {
+						DefinitivRejectMessage rejectMessage = new DefinitivRejectMessage();
+						rejectMessage.orderId = order.id;
+						sendMessage(workerInformationList.get(worker.id).agentDescription.getMessageBoxAddress(), rejectMessage);
+				}
 				currentOrders.remove(order);
 			}
 		}
