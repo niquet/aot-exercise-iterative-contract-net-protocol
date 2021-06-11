@@ -34,7 +34,7 @@ public class BrokerBean extends AbstractAgentBean {
 	private Boolean isGameStarted = false;
 	/* Here are values that need to be remembered for future decisions */
 	private Integer maximumNumberOfAgents = null;
-	private Integer time = 0;
+	private Integer time = 0;//Estimate for current Game Round on Server side
 	/* Here are data structures that hold complex information */
 	private GridworldGame gridworldGame = null;
 	private List<Worker> initialWorkers = new ArrayList<>();
@@ -202,34 +202,34 @@ public class BrokerBean extends AbstractAgentBean {
 			if (payload instanceof AuctionResponse){
 				/* Worker Angebote kommen an */
 
-				AuctionResponse response = (AuctionResponse) message.getPayload();
+				AuctionResponse auctionResponse = (AuctionResponse) message.getPayload();
 
 				/* Wenn Angebot eingeht, mit bisherigem BestOffer vergleichen */
-				if(response.status == Result.SUCCESS) {
-					if(Orders.get(response.orderId).value - response.deadlineOffer * Orders.get(response.orderId).turnPenalty > 0) {
-						if (bestOffers.get(response.orderId) == null || response.deadlineOffer < bestOffers.get(response.orderId).deadlineOffer) {
-							bestOffers.put(response.orderId, response);
+				if(auctionResponse.status == Result.SUCCESS) { // sichergehen, dass in der Antwort auch ein Gebot ist
+					if(Orders.get(auctionResponse.orderId).value - auctionResponse.deadlineOffer * Orders.get(auctionResponse.orderId).turnPenalty > 0) { // Broker maximiert Reward, daher immer testen ob der erwartete Reward aus dem Offer >0 ist
+						if (bestOffers.get(auctionResponse.orderId) == null || auctionResponse.deadlineOffer < bestOffers.get(auctionResponse.orderId).deadlineOffer) {
+							bestOffers.put(auctionResponse.orderId, auctionResponse);
 							DefinitivBidMessage bidMessage = new DefinitivBidMessage();
-							bidMessage.orderId = response.orderId;
-							bidMessage.deadlineOffer = response.deadlineOffer;
-							sendMessage(response.sender, bidMessage);
+							bidMessage.orderId = auctionResponse.orderId;
+							bidMessage.deadlineOffer = auctionResponse.deadlineOffer;
+							sendMessage(auctionResponse.sender, bidMessage);
 						} else {
 							AuctionMessage startAuction = new AuctionMessage();
-							startAuction.orderId = response.orderId;
-							startAuction.deadline = Orders.get(response.orderId).deadline;
+							startAuction.orderId = auctionResponse.orderId;
+							startAuction.deadline = this.Orders.get(auctionResponse.orderId).deadline;
 						}
 					}
 				} else {
 					DefinitivRejectMessage rejectMessage = new DefinitivRejectMessage();
-					rejectMessage.orderId = response.orderId;
-					sendMessage(response.sender, rejectMessage);
+					rejectMessage.order = this.Orders.get(auctionResponse.orderId);
+					sendMessage(auctionResponse.sender, rejectMessage);
 				}
 
 				/* TODO öfters proposen, proposal verändern ? */
 
 				/* server deadline, wenn die Zeit vorbei is wollen wir immer verfallen lassen, oder den Worker mit bestem Angebot zuweisen */
 				for (Order order : currentOrders) {
-					if(response.orderId.equals(order.id)) {
+					if(auctionResponse.orderId.equals(order.id)) {
 						acceptProposal(order);
 						break;
 					}
@@ -298,7 +298,7 @@ public class BrokerBean extends AbstractAgentBean {
 				for (Worker worker: initialWorkers) {
 					if(!workerInformationList.get(worker.id).agentDescription.getMessageBoxAddress().equals(bestOffers.get(order.id).sender)){
 						DefinitivRejectMessage rejectMessage = new DefinitivRejectMessage();
-						rejectMessage.orderId = order.id;
+						rejectMessage.order = this.Orders.get(order.id);
 						sendMessage(workerInformationList.get(worker.id).agentDescription.getMessageBoxAddress(), rejectMessage);
 					}
 				}
@@ -307,7 +307,7 @@ public class BrokerBean extends AbstractAgentBean {
 				/* Order für uns nicht machbar, aus Liste löschen und nicht darauf antworten */
 				for (Worker worker: initialWorkers) {
 						DefinitivRejectMessage rejectMessage = new DefinitivRejectMessage();
-						rejectMessage.orderId = order.id;
+						rejectMessage.order = this.Orders.get(order.id);
 						sendMessage(workerInformationList.get(worker.id).agentDescription.getMessageBoxAddress(), rejectMessage);
 				}
 				currentOrders.remove(order);
