@@ -159,50 +159,6 @@ public class WorkerBean extends AbstractAgentBean {
 					sendMessage(broker, assignOrderConfirm);
 				}
 
-				/* TODO brauchen wir das überhaupt noch?? */
-				if (payload instanceof PositionMessage) {
-					/** Order to assign to the agent */
-
-					PositionMessage positionMessage = (PositionMessage) message.getPayload();
-
-					ICommunicationAddress brokerAddress = message.getSender();
-					broker = brokerAddress;
-
-					PositionConfirm positionConfirm = new PositionConfirm();
-					positionConfirm.workerAgentId = thisAgent.getAgentId();
-					positionConfirm.gameId = positionMessage.gameId;
-
-					/**
-					 * Send Position confirm with FAIL if the message is not for us
-					 */
-					if(!positionMessage.workerId.equals(thisAgent.getAgentId()) && position == null) {
-						positionConfirm.state = Result.FAIL;
-						sendMessage(brokerAddress, positionConfirm);
-						return;
-					}
-
-					positionConfirm.state = Result.SUCCESS;
-					sendMessage(brokerAddress, positionConfirm);
-					time = 1;
-
-					/**
-					 * Only set position if it is for us
-					 */
-					if(position == null || workerIdForServer == null) {
-						position = positionMessage.position;
-						workerIdForServer = positionMessage.workerAgentId;
-					}
-
-					/**
-					 *
-					 * DEBUGGING
-					 *
-					 */
-
-					log.info("WORKER RECEIVED " + positionMessage.toString());
-
-				}
-
 				if(payload instanceof AuctionMessage) {
 
 					AuctionMessage auctionMessage = (AuctionMessage) message.getPayload();
@@ -257,6 +213,7 @@ public class WorkerBean extends AbstractAgentBean {
 	private int possibleEnd(Position target){
 		Position goal = position;
 		int zeit = 0;
+		/* TODO wo rein damit gewinn maximiert ?? */
 		for (Order order: priorityQueue) {
 			zeit += order.position.distance(goal) + 1;
 			goal = order.position;

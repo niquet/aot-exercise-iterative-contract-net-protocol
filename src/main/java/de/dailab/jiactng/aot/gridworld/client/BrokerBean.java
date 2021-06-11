@@ -203,13 +203,19 @@ public class BrokerBean extends AbstractAgentBean {
 
 				AuctionResponse response = (AuctionResponse) message.getPayload();
 
+				/* TODO Warten bis alle Order raus */
 				/* Wenn Angebot eingeht, mit bisherigem BestOffer vergleichen */
 				if(response.status == Result.SUCCESS) {
 					if (bestOffers.get(response.orderId) == null || response.deadlineOffer < bestOffers.get(response.orderId).deadlineOffer) {
 						bestOffers.put(response.orderId, response);
 					}
+					/*
+					TODO: Hier Nachricht erneut senden mit verändertem Proposal. Vielleicht besten Worker abfangen falls raus...
+					 */
 				}
 
+				/* TODO öfters proposen, proposal verändern ? */
+				/* TODO if proposal Result FAIL reject message schicken! */
 				/* server deadline, wenn die Zeit vorbei is wollen wir immer verfallen lassen, oder den Worker mit bestem Angebot zuweisen */
 				for (Order order : currentOrders) {
 					if(response.orderId.equals(order.id)) {
@@ -217,12 +223,8 @@ public class BrokerBean extends AbstractAgentBean {
 						break;
 					}
 					/* Vielleicht durch alle Order durchgehen, um sicherzustellen, dass sie auch bearbeitet werden.
-					Wie distanzieren zwischen assigned orders und neuen orders??
+					Wie distanzieren zwischen assigned orders und neuen orders?? */
 
-					if(time - order.created > 2){
-						acceptProposal(order);
-						break;
-					} */
 				}
 
 				/* Auswerten:
@@ -252,11 +254,11 @@ public class BrokerBean extends AbstractAgentBean {
 
 		}
 	time ++;
-	// letzte Klammer vom execute
 	}
 
 	/** Nach Zeit Ablauf dem besten Worker den Order schicken */
 	private void acceptProposal(Order order) {
+		/* TODO wann brechen wir Auktion ab*/
 		if (time - order.created > 2) {
 			if (bestOffers.get(order.id) != null) {
 				// notify Server
@@ -272,6 +274,7 @@ public class BrokerBean extends AbstractAgentBean {
 				assignOrder.gameId = this.gameId;
 				// an worker mit bestem angebot
 				sendMessage(bestOffers.get(order.id).sender, assignOrder);
+				/* TODO: Reject an restliche Broker schicken !!! */
 				currentOrders.remove(order);
 			} else {
 				/* Order für uns nicht machbar, aus Liste löschen und nicht darauf antworten */
