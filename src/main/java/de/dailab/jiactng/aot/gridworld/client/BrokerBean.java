@@ -105,6 +105,12 @@ public class BrokerBean extends AbstractAgentBean {
 				 * PositionMessages are sent to inform the worker where it is located
 				 * additionally put the position of the worker in the positionMap
 				 */
+				ArrayList<ICommunicationAddress> workerAddressList = new ArrayList<>();
+
+				for (IAgentDescription agentDescription: agentDescriptionList) {
+					workerAddressList.add(agentDescription.getMessageBoxAddress());
+				}
+
 				for(Worker worker: startGameResponse.initialWorkers) {
 
 					WorkerInformation workerInformation = new WorkerInformation();
@@ -126,6 +132,7 @@ public class BrokerBean extends AbstractAgentBean {
 					acoMessage.obstacles = this.gridworldGame.obstacles;
 					acoMessage.size = this.gridworldGame.size;
 					acoMessage.gameId = this.gameId;
+					acoMessage.workerAddressList = workerAddressList;
 
 					ICommunicationAddress workerAddress = workerInformation.agentDescription.getMessageBoxAddress();
 					sendMessage(workerAddress, acoMessage);

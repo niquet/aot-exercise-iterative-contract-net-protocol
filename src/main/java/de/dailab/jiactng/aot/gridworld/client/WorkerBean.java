@@ -9,16 +9,14 @@ import de.dailab.jiactng.agentcore.knowledge.IFact;
 import de.dailab.jiactng.aot.gridworld.messages.*;
 import de.dailab.jiactng.aot.gridworld.model.Order;
 import de.dailab.jiactng.aot.gridworld.model.Position;
+import de.dailab.jiactng.aot.gridworld.model.Worker;
 import de.dailab.jiactng.aot.gridworld.model.WorkerAction;
 import org.sercho.masp.space.event.SpaceEvent;
 import org.sercho.masp.space.event.SpaceObserver;
 import org.sercho.masp.space.event.WriteCallEvent;
 
 import java.io.Serializable;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.PriorityQueue;
+import java.util.*;
 
 
 /**
@@ -54,6 +52,7 @@ public class WorkerBean extends AbstractAgentBean {
 	private ICommunicationAddress broker = null;
 	private int time;
 
+	private ArrayList<ICommunicationAddress> otherWorkers = null;
 
 	@Override
 	public void doStart() throws Exception {
@@ -121,6 +120,10 @@ public class WorkerBean extends AbstractAgentBean {
 					position = acoMessage.position;
 					gameId = acoMessage.gameId;
 					broker = message.getSender();
+					if (otherWorkers == null) {
+						otherWorkers = acoMessage.workerAddressList;
+					}
+
 					/* TODO Spielfeld initialisieren, obstacles und andere Worker speichern? */
 
 					ACOConfirm acoConfirm = new ACOConfirm();
@@ -214,6 +217,14 @@ public class WorkerBean extends AbstractAgentBean {
 						// TODO unbekannte obstacles
 						if(workerConfirm.action != WorkerAction.ORDER) {
 							lastMoveFailed = true;
+							for(ICommunicationAddress workerAddress: otherWorkers) {
+								PositionUpdate obstacleUpdate = new PositionUpdate();
+								obstacleUpdate.gameId = gameId;
+								obstacleUpdate.position = denoteObstacle(lastMove);
+								obstacleUpdate.workerAgentId = thisAgent.getAgentId();
+								sendMessage(workerAddress, obstacleUpdate);
+							}
+
 						}
 
 						return;
@@ -224,6 +235,17 @@ public class WorkerBean extends AbstractAgentBean {
 						doMove(workerConfirm.action);
 						lastMoveFailed = false;
 					}
+				}
+
+				if (payload instanceof PositionUpdate) {
+
+					if (((PositionUpdate) payload).workerAgentId.equals(thisAgent.getAgentId())) {
+						// TODO Ignore
+						return;
+					}
+
+					// TODO let the obstacle magic happen
+
 				}
 
 			}
@@ -341,5 +363,24 @@ public class WorkerBean extends AbstractAgentBean {
 		if (action == WorkerAction.SOUTH) position = new Position(position.x, position.y + 1);
 		if (action == WorkerAction.WEST)  position = new Position(position.x - 1, position.y);
 		if (action == WorkerAction.EAST)  position = new Position(position.x + 1, position.y);
+	}
+
+	private Position denoteObstacle(WorkerAction action) {
+		Position obstacle = null;
+		switch(action) {
+			case NORTH:
+				obstacle = new Position(position.x, position.y - 1);
+				break;
+			case SOUTH:
+				obstacle = new Position(position.x, position.y + 1);
+				break;
+			case WEST:
+				obstacle = new Position(position.x - 1, position.y);
+				break;
+			case EAST:
+				obstacle = new new Position(position.x + 1, position.y);
+				break;
+		}
+		return obstacle;
 	}
 }
