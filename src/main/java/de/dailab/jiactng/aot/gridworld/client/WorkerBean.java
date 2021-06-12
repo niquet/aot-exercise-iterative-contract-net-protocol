@@ -32,8 +32,8 @@ public class WorkerBean extends AbstractAgentBean {
     private final Comparator<Order> compareOrder = new Comparator<Order>() {
         @Override
         public int compare(Order o1, Order o2) {
-            int p1 = position.distance(o1.position);
-            int p2 = position.distance(o2.position);
+            int p1 = aStarDistance(position, o1.position);
+            int p2 = aStarDistance(position, o2.position);
             if (p1 < p2) return -1;
             if (p1 > p2) return 1;
             return 0;
@@ -45,6 +45,8 @@ public class WorkerBean extends AbstractAgentBean {
     private Integer gameId = null;
     private Position gridSize = null;
     private Set<Position> obstacles = null;
+    private Integer estimatedRemainingTime = 0;
+    private Position estimatedDestination = null;
 
     private Position position = null;
     private WorkerAction lastMove = null;
@@ -81,9 +83,13 @@ public class WorkerBean extends AbstractAgentBean {
                 if (!priorityQueue.isEmpty()) {
                     firstOrder = priorityQueue.peek();
 
-                } else return;
+                } else {
+                    return;
+                }
             }
-			if (position == null) return;
+            if (position == null) {
+                return;
+            }
             /* Kann durch den ACO Worker alles geändert werden, aber für funktionalität lass ich es erstmal so */
 
             if (position.equals(priorityQueue.peek().position)) {
@@ -98,14 +104,14 @@ public class WorkerBean extends AbstractAgentBean {
             WorkerMessage move = new WorkerMessage();
             aStar(position, firstOrder.position);
             Position nextMove = getNextMove();
-            if (nextMove != null){
-				move.action = getMoveAction(position, nextMove);
-				lastMove = move.action;
-				move.gameId = gameId;
-				move.workerId = workerIdForServer;
+            if (nextMove != null) {
+                move.action = getMoveAction(position, nextMove);
+                lastMove = move.action;
+                move.gameId = gameId;
+                move.workerId = workerIdForServer;
 
-				sendMessage(orderToAddress.get(firstOrder), move);
-			}
+                sendMessage(orderToAddress.get(firstOrder), move);
+            }
 
         }
 
@@ -197,8 +203,8 @@ public class WorkerBean extends AbstractAgentBean {
                     } else {
                         AuctionMessage sendAgain = new AuctionMessage();
                         sendAgain.orderId = auctionMessage.orderId;
-                        sendAgain.deadline =  auctionMessage.deadline;
-                        sendAgain.orderPosition =  auctionMessage.orderPosition;
+                        sendAgain.deadline = auctionMessage.deadline;
+                        sendAgain.orderPosition = auctionMessage.orderPosition;
                         sendMessage(broker, auctionMessage);
                     }
 
@@ -255,21 +261,18 @@ public class WorkerBean extends AbstractAgentBean {
 
                     if (!hasArrivedAtTarget) {
                         // Agent hasn't arrived at target, so conduct the planned move
-                            doMove(workerConfirm.action);
-                            lastMoveFailed = false;
-                        }
+                        doMove(workerConfirm.action);
+                        lastMoveFailed = false;
+                    }
                 }
 
+                // fertig.
                 if (payload instanceof ObstacleUpdate) {
-
                     if (((ObstacleUpdate) payload).workerAgentId.equals(thisAgent.getAgentId())) {
-                        // TODO Ignore
                         return;
                     }
-
-                    // TODO let the obstacle magic happen -- erstmal done oder so
                     obstacles.add(((ObstacleUpdate) payload).position);
-                    if(handleOrder != null){
+                    if (handleOrder != null) {
                         aStar(position, handleOrder.position);
                     }
 
@@ -315,6 +318,8 @@ public class WorkerBean extends AbstractAgentBean {
      */
     private void evaluateOrder(Order order) {
         // TODO
+
+
     }
 
     /**
@@ -400,7 +405,7 @@ public class WorkerBean extends AbstractAgentBean {
             path.remove(path.get(0));
             return move;
         }
-		return null;
+        return null;
     }
 
     private void doMove(WorkerAction action) {
@@ -426,7 +431,7 @@ public class WorkerBean extends AbstractAgentBean {
      * Wegfindungsfunktion mit A*
      * nutzt außer Argumenten noch gridSize, obstacles
      * QUELLE: https://github.com/marcelo-s/A-Star-Java-Implementation
-     * */
+     */
     private void aStar(Position start, Position target) {
         AStar astar = new AStar(gridSize.x, gridSize.y, new Node(start.x, start.y), new Node(target.x, target.y), 1, Integer.MAX_VALUE);
 
@@ -442,6 +447,22 @@ public class WorkerBean extends AbstractAgentBean {
         path = astar.findPath();
         path.remove(path.get(0));
         System.out.println("PATH: " + path.toString());
+    }
+
+    private int aStarDistance(Position start, Position target) {
+        AStar astar = new AStar(gridSize.x, gridSize.y, new Node(start.x, start.y), new Node(target.x, target.y), 1, Integer.MAX_VALUE);
+
+        int[][] obsts = new int[obstacles.size()][2];
+        int i = 0;
+        for (Position obs : obstacles) {
+            obsts[i][0] = obs.x;
+            obsts[i][1] = obs.y;
+            i++;
+        }
+        astar.setBlocks(obsts);
+
+        return astar.findPath().size();
+
     }
 
     private Position denoteObstacle(WorkerAction action) {
