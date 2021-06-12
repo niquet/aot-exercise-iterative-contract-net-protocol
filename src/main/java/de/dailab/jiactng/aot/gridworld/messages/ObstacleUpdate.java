@@ -5,7 +5,7 @@ import de.dailab.jiactng.aot.gridworld.model.Position;
 /**
  * Sent from Broker to Worker to indicate where the worker currently is positioned.
  */
-public class PositionUpdate extends GameMessage {
+public class ObstacleUpdate extends GameMessage {
 
     private static final long serialVersionUID = -842304050698432227L;
 
