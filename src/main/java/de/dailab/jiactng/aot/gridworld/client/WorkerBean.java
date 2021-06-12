@@ -164,16 +164,19 @@ public class WorkerBean extends AbstractAgentBean {
 					AuctionMessage auctionMessage = (AuctionMessage) message.getPayload();
 					broker = message.getSender();
 					if (position != null) {
-						/* Calculated distance, considering already taken Assignments, hier intelligenz einbauen */
+						/* Calculated distance, considering already taken Assignments, hier Intelligenz einbauen */
 						AuctionResponse auctionResponse = new AuctionResponse();
 						auctionResponse.orderId = auctionMessage.orderId;
 						auctionResponse.gameId = gameId;
 						auctionResponse.sender = thisAgent.getAgentDescription().getMessageBoxAddress();
-						auctionResponse.deadlineOffer = possibleEnd(auctionMessage.orderPosition) + time;
-						if (auctionResponse.deadlineOffer >= auctionMessage.deadline)
+						if (auctionMessage.orderPosition == null || position == null){
 							auctionResponse.status = Result.FAIL;
-						else auctionResponse.status = Result.SUCCESS;
-
+					} else {
+							auctionResponse.deadlineOffer = possibleEnd(auctionMessage.orderPosition) + time;
+							if (auctionResponse.deadlineOffer >= auctionMessage.deadline)
+								auctionResponse.status = Result.FAIL;
+							else auctionResponse.status = Result.SUCCESS;
+						}
 						sendMessage(broker, auctionResponse);
 					}
 				}
@@ -228,10 +231,10 @@ public class WorkerBean extends AbstractAgentBean {
 	}
 
 	private int possibleEnd(Position target){
-		Position goal = position;
+		Position goal = this.position;
 		int zeit = 0;
 		/* TODO wo rein damit gewinn maximiert ?? */
-		for (Order order: priorityQueue) {
+		for (Order order: this.priorityQueue) {
 			zeit += order.position.distance(goal) + 1;
 			goal = order.position;
 		}

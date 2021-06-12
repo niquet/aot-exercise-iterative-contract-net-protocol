@@ -115,7 +115,7 @@ public class BrokerBean extends AbstractAgentBean {
 					workerInformation.agentId = workerInformation.agentDescription.getAid();
 					workerInformation.initialWorkerPosition = worker.position;
 
-					workerInformationList.put(workerInformation.agentId, workerInformation);
+					workerInformationList.put(workerInformation.workerId, workerInformation);
 
 					// Send each Agent their current position
 					ACOMessage acoMessage = new ACOMessage();
@@ -191,6 +191,7 @@ public class BrokerBean extends AbstractAgentBean {
 				startAuction.orderId = orderMessage.order.id;
 				startAuction.deadline =  orderMessage.order.deadline;
 				startAuction.orderPosition =  orderMessage.order.position;
+				Orders.put(orderMessage.order.id, orderMessage.order);
 				if(done) {
 					for (Worker worker : this.initialWorkers) {
 						sendMessage(agentDescriptionList.get(initialWorkers.indexOf(worker)).getMessageBoxAddress(), startAuction);
@@ -217,6 +218,8 @@ public class BrokerBean extends AbstractAgentBean {
 							AuctionMessage startAuction = new AuctionMessage();
 							startAuction.orderId = auctionResponse.orderId;
 							startAuction.deadline = this.Orders.get(auctionResponse.orderId).deadline;
+							startAuction.orderPosition = this.Orders.get(auctionResponse.orderId).position;
+							sendMessage(message.getSender(), startAuction);
 						}
 					}
 				} else {
@@ -250,10 +253,12 @@ public class BrokerBean extends AbstractAgentBean {
 				if(bid.status == Result.SUCCESS){
 					Orders.get(bid.orderId).deadline = bid.deadlineOffer;
 				} else {
-					bestOffers.remove(bid.orderId);
+					if(bestOffers.get(bid.orderId).sender.equals(message.getSender())) bestOffers.remove(bid.orderId);
 					AuctionMessage startAuction = new AuctionMessage();
 					startAuction.orderId = bid.orderId;
 					startAuction.deadline = Orders.get(bid.orderId).deadline;
+					startAuction.orderPosition = this.Orders.get(bid.orderId).position;
+					sendMessage(message.getSender(), startAuction);
 				}
 			}
 
@@ -296,6 +301,7 @@ public class BrokerBean extends AbstractAgentBean {
 				// an worker mit bestem angebot
 				sendMessage(bestOffers.get(order.id).sender, assignOrder);
 				for (Worker worker: initialWorkers) {
+					System.out.println("" + workerInformationList.get(worker.id).agentDescription.getMessageBoxAddress() + " Best Offer: " + (bestOffers.get(order.id).sender));
 					if(!workerInformationList.get(worker.id).agentDescription.getMessageBoxAddress().equals(bestOffers.get(order.id).sender)){
 						DefinitivRejectMessage rejectMessage = new DefinitivRejectMessage();
 						rejectMessage.order = this.Orders.get(order.id);
