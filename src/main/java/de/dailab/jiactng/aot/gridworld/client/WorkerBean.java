@@ -81,13 +81,20 @@ public class WorkerBean extends AbstractAgentBean {
                 if (!priorityQueue.isEmpty()) {
                     firstOrder = priorityQueue.peek();
 
-
-
-
                 } else return;
             }
 			if (position == null) return;
             /* Kann durch den ACO Worker alles geändert werden, aber für funktionalität lass ich es erstmal so */
+
+            if (position.equals(priorityQueue.peek().position)) {
+                WorkerMessage move = new WorkerMessage();
+                move.action = WorkerAction.ORDER;
+                move.gameId = gameId;
+                move.workerId = workerIdForServer;
+                hasArrivedAtTarget = true;
+
+                sendMessage(orderToAddress.get(priorityQueue.peek()), move);
+            }
             WorkerMessage move = new WorkerMessage();
             aStar(position, firstOrder.position);
             Position nextMove = getNextMove();
@@ -99,7 +106,6 @@ public class WorkerBean extends AbstractAgentBean {
 
 				sendMessage(orderToAddress.get(firstOrder), move);
 			}
-
 
         }
 
@@ -249,9 +255,9 @@ public class WorkerBean extends AbstractAgentBean {
 
                     if (!hasArrivedAtTarget) {
                         // Agent hasn't arrived at target, so conduct the planned move
-                        doMove(workerConfirm.action);
-                        lastMoveFailed = false;
-                    }
+                            doMove(workerConfirm.action);
+                            lastMoveFailed = false;
+                        }
                 }
 
                 if (payload instanceof ObstacleUpdate) {

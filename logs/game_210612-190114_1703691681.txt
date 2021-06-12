@@ -1,0 +1,109 @@
+210612-190114
+GAME No. 1703691681
+TURN 101/100
+Brokers
+B(a-971cc782a91, workers=[W(w1, Pos(13, 10), 0), W(w2, Pos(7, 9), 0), W(w3, Pos(19, 1), 0), W(w4, Pos(4, 7), 0), W(w5, Pos(15, 15), 0)], taken=[], completed=[], failed=[o2, o1, o5, o7])
+Orders
+O(o1, Pos(16, 15), cr=0, dl=20, cp=-1, val=10, tp=0)
+O(o2, Pos(12, 3), cr=0, dl=20, cp=-1, val=30, tp=0)
+O(o3, Pos(1, 4), cr=10, dl=25, cp=-1, val=40, tp=2)
+O(o4, Pos(0, 3), cr=11, dl=23, cp=-1, val=15, tp=1)
+O(o5, Pos(4, 7), cr=25, dl=55, cp=-1, val=50, tp=0)
+O(o6, Pos(5, 13), cr=26, dl=45, cp=-1, val=55, tp=3)
+O(o7, Pos(13, 10), cr=60, dl=77, cp=-1, val=5, tp=0)
+O(o8, Pos(2, 11), cr=71, dl=99, cp=-1, val=10, tp=1)
+O(o9, Pos(0, 19), cr=90, dl=99, cp=-1, val=10, tp=0)
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	w3
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	w4	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	w2	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	w1	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	w5	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	#	#	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	#	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+
+210612-185932: Sending StartGameResponse(game=1703691681, size=Pos(20, 20), workers=[W(w1, Pos(12, 14), 0), W(w2, Pos(7, 9), 0), W(w3, Pos(19, 1), 0), W(w4, Pos(10, 10), 0), W(w5, Pos(17, 9), 0)], obstacles: 3)
+210612-185932: Sending OrderMessage(game=1703691681, order=O(o1, Pos(16, 15), cr=0, dl=20, cp=-1, val=10, tp=0))
+210612-185932: Sending OrderMessage(game=1703691681, order=O(o2, Pos(12, 3), cr=0, dl=20, cp=-1, val=30, tp=0))
+210612-185934: Received TakeOrderMessage(game=1703691681, order=o2, broker=a-971cc782a91)
+210612-185934: Sending TakeOrderConfirm(game=1703691681, order=o2, broker=a-971cc782a91, SUCCESS)
+210612-185934: Received TakeOrderMessage(game=1703691681, order=o1, broker=a-971cc782a91)
+210612-185934: Sending TakeOrderConfirm(game=1703691681, order=o1, broker=a-971cc782a91, SUCCESS)
+210612-185935: Received WorkerMessage(game=1703691681, worker=w5, action=WEST)
+210612-185935: Sending WorkerConfirm(game=1703691681, worker=w5, action=WEST, SUCCESS)
+210612-185936: Received WorkerMessage(game=1703691681, worker=w5, action=SOUTH)
+210612-185936: Sending WorkerConfirm(game=1703691681, worker=w5, action=SOUTH, SUCCESS)
+210612-185937: Received WorkerMessage(game=1703691681, worker=w5, action=SOUTH)
+210612-185937: Sending WorkerConfirm(game=1703691681, worker=w5, action=SOUTH, SUCCESS)
+210612-185938: Received WorkerMessage(game=1703691681, worker=w5, action=SOUTH)
+210612-185938: Sending WorkerConfirm(game=1703691681, worker=w5, action=SOUTH, SUCCESS)
+210612-185939: Received WorkerMessage(game=1703691681, worker=w5, action=SOUTH)
+210612-185939: Sending WorkerConfirm(game=1703691681, worker=w5, action=SOUTH, SUCCESS)
+210612-185940: Received WorkerMessage(game=1703691681, worker=w5, action=SOUTH)
+210612-185940: Sending WorkerConfirm(game=1703691681, worker=w5, action=SOUTH, SUCCESS)
+210612-185941: Received WorkerMessage(game=1703691681, worker=w5, action=SOUTH)
+210612-185941: Sending WorkerConfirm(game=1703691681, worker=w5, action=SOUTH, SUCCESS)
+210612-185942: Sending OrderMessage(game=1703691681, order=O(o3, Pos(1, 4), cr=10, dl=25, cp=-1, val=40, tp=2))
+210612-185943: Sending OrderMessage(game=1703691681, order=O(o4, Pos(0, 3), cr=11, dl=23, cp=-1, val=15, tp=1))
+210612-185949: Received WorkerMessage(game=1703691681, worker=w5, action=WEST)
+210612-185949: Sending WorkerConfirm(game=1703691681, worker=w5, action=WEST, SUCCESS)
+210612-185953: Sending OrderCompleted(game=1703691681, order=o2, FAIL, reward=-30)
+210612-185953: Sending OrderCompleted(game=1703691681, order=o1, FAIL, reward=-10)
+210612-185957: Sending OrderMessage(game=1703691681, order=O(o5, Pos(4, 7), cr=25, dl=55, cp=-1, val=50, tp=0))
+210612-185958: Sending OrderMessage(game=1703691681, order=O(o6, Pos(5, 13), cr=26, dl=45, cp=-1, val=55, tp=3))
+210612-185959: Received TakeOrderMessage(game=1703691681, order=o5, broker=a-971cc782a91)
+210612-185959: Sending TakeOrderConfirm(game=1703691681, order=o5, broker=a-971cc782a91, SUCCESS)
+210612-190000: Received WorkerMessage(game=1703691681, worker=w4, action=WEST)
+210612-190000: Sending WorkerConfirm(game=1703691681, worker=w4, action=WEST, SUCCESS)
+210612-190001: Received WorkerMessage(game=1703691681, worker=w4, action=WEST)
+210612-190001: Sending WorkerConfirm(game=1703691681, worker=w4, action=WEST, SUCCESS)
+210612-190002: Received WorkerMessage(game=1703691681, worker=w4, action=WEST)
+210612-190002: Sending WorkerConfirm(game=1703691681, worker=w4, action=WEST, SUCCESS)
+210612-190003: Received WorkerMessage(game=1703691681, worker=w4, action=WEST)
+210612-190003: Sending WorkerConfirm(game=1703691681, worker=w4, action=WEST, SUCCESS)
+210612-190004: Received WorkerMessage(game=1703691681, worker=w4, action=WEST)
+210612-190004: Sending WorkerConfirm(game=1703691681, worker=w4, action=WEST, SUCCESS)
+210612-190005: Received WorkerMessage(game=1703691681, worker=w4, action=WEST)
+210612-190005: Sending WorkerConfirm(game=1703691681, worker=w4, action=WEST, SUCCESS)
+210612-190006: Received WorkerMessage(game=1703691681, worker=w4, action=NORTH)
+210612-190006: Sending WorkerConfirm(game=1703691681, worker=w4, action=NORTH, SUCCESS)
+210612-190007: Received WorkerMessage(game=1703691681, worker=w4, action=NORTH)
+210612-190007: Sending WorkerConfirm(game=1703691681, worker=w4, action=NORTH, SUCCESS)
+210612-190008: Received WorkerMessage(game=1703691681, worker=w4, action=NORTH)
+210612-190008: Sending WorkerConfirm(game=1703691681, worker=w4, action=NORTH, SUCCESS)
+210612-190029: Sending OrderCompleted(game=1703691681, order=o5, FAIL, reward=-50)
+210612-190033: Sending OrderMessage(game=1703691681, order=O(o7, Pos(13, 10), cr=60, dl=77, cp=-1, val=5, tp=0))
+210612-190034: Received WorkerMessage(game=1703691681, worker=w1, action=NORTH)
+210612-190034: Sending WorkerConfirm(game=1703691681, worker=w1, action=NORTH, SUCCESS)
+210612-190034: Received TakeOrderMessage(game=1703691681, order=o7, broker=a-971cc782a91)
+210612-190034: Sending TakeOrderConfirm(game=1703691681, order=o7, broker=a-971cc782a91, SUCCESS)
+210612-190035: Received WorkerMessage(game=1703691681, worker=w1, action=NORTH)
+210612-190035: Sending WorkerConfirm(game=1703691681, worker=w1, action=NORTH, SUCCESS)
+210612-190036: Received WorkerMessage(game=1703691681, worker=w1, action=NORTH)
+210612-190036: Sending WorkerConfirm(game=1703691681, worker=w1, action=NORTH, SUCCESS)
+210612-190037: Received WorkerMessage(game=1703691681, worker=w1, action=NORTH)
+210612-190037: Sending WorkerConfirm(game=1703691681, worker=w1, action=NORTH, SUCCESS)
+210612-190038: Received WorkerMessage(game=1703691681, worker=w1, action=EAST)
+210612-190038: Sending WorkerConfirm(game=1703691681, worker=w1, action=EAST, SUCCESS)
+210612-190044: Sending OrderMessage(game=1703691681, order=O(o8, Pos(2, 11), cr=71, dl=99, cp=-1, val=10, tp=1))
+210612-190051: Sending OrderCompleted(game=1703691681, order=o7, FAIL, reward=-5)
+210612-190103: Sending OrderMessage(game=1703691681, order=O(o9, Pos(0, 19), cr=90, dl=99, cp=-1, val=10, tp=0))
+210612-190114: Sending WorkerScoreMessage(game=1703691681, worker=w1, winner?=true, orders completed=0)
+210612-190114: Sending WorkerScoreMessage(game=1703691681, worker=w2, winner?=false, orders completed=0)
+210612-190114: Sending WorkerScoreMessage(game=1703691681, worker=w3, winner?=false, orders completed=0)
+210612-190114: Sending WorkerScoreMessage(game=1703691681, worker=w4, winner?=false, orders completed=0)
+210612-190114: Sending WorkerScoreMessage(game=1703691681, worker=w5, winner?=false, orders completed=0)
+210612-190114: Sending EndGameMessage(game=1703691681, broker=a-971cc782a91, winner?=true, reward=-117,00)
+

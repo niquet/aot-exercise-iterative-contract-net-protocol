@@ -70,7 +70,7 @@ public class BrokerBean extends AbstractAgentBean {
 			if (!isGameStarted) {
 				StartGameMessage startGameMessage = new StartGameMessage();
 				startGameMessage.brokerId = thisAgent.getAgentId();
-				startGameMessage.gridFile = "/grids/04_1.grid";
+				startGameMessage.gridFile = "/grids/example.grid";
 				sendMessage(server, startGameMessage);
 
 				this.isGameStarted = true;
@@ -141,7 +141,7 @@ public class BrokerBean extends AbstractAgentBean {
 
 				done = true;
 
-				/* Geht schöner - nur für funktionalität noch drinnen - abfangen dass worker informationen noch nicht da */
+				/* Geht schöner - nur für funktionalität noch drinnen - abfangen dass worker Informationen noch nicht da */
 				for(Order order : currentOrders){
 					for (Worker worker: initialWorkers) {
 						AuctionMessage startAuction = new AuctionMessage();
@@ -183,7 +183,6 @@ public class BrokerBean extends AbstractAgentBean {
 					acoMessage.size = this.gridworldGame.size;
 					acoMessage.gameId = this.gameId;
 
-					/* TODO why can't we use message.getSender() here? - Seems to work ...*/
 					//ICommunicationAddress workerAddress = workerInformation.agentDescription.getMessageBoxAddress();
 					sendMessage(message.getSender(), acoMessage);
 
@@ -245,8 +244,6 @@ public class BrokerBean extends AbstractAgentBean {
 					sendMessage(auctionResponse.sender, rejectMessage);
 				}
 
-				/* TODO öfters proposen, proposal verändern ? */
-
 				/* server deadline, wenn die Zeit vorbei is wollen wir immer verfallen lassen, oder den Worker mit bestem Angebot zuweisen */
 				for (Order order : currentOrders) {
 					if(auctionResponse.orderId.equals(order.id)) {
@@ -257,10 +254,6 @@ public class BrokerBean extends AbstractAgentBean {
 					Wie distanzieren zwischen assigned orders und neuen orders?? */
 
 				}
-
-				/* Auswerten:
-				- will ich die Auktion fortführen
-				- 3 Runden Zeit vom Server, reward  max(value - (turnCompleted - turnCreated) * turnPenalty, 0), wenn reward 0, auktion ende */
 
 			}
 
@@ -284,7 +277,6 @@ public class BrokerBean extends AbstractAgentBean {
 
 				if(orderConfirm.state == Result.FAIL) System.out.println("Order wurde nicht angenommen!");
 
-				/* TODO Zuweisung Order, Worker */
 			}
 
 			if (payload instanceof EndGameMessage) {

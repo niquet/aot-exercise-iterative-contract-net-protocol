@@ -1,0 +1,134 @@
+210612-201555
+GAME No. 407968632
+TURN 101/100
+Brokers
+B(a-d85167dff01, workers=[W(w1, Pos(4, 7), 1), W(w2, Pos(13, 10), 1), W(w3, Pos(19, 1), 0), W(w4, Pos(10, 10), 0), W(w5, Pos(12, 3), 1)], taken=[], completed=[o2, o5, o7], failed=[])
+Orders
+O(o1, Pos(16, 15), cr=0, dl=20, cp=-1, val=10, tp=0)
+O(o2, Pos(12, 3), cr=0, dl=20, cp=13, val=30, tp=0)
+O(o3, Pos(1, 4), cr=10, dl=25, cp=-1, val=40, tp=2)
+O(o4, Pos(0, 3), cr=11, dl=23, cp=-1, val=15, tp=1)
+O(o5, Pos(4, 7), cr=25, dl=55, cp=42, val=50, tp=0)
+O(o6, Pos(5, 13), cr=26, dl=45, cp=-1, val=55, tp=3)
+O(o7, Pos(13, 10), cr=60, dl=77, cp=69, val=5, tp=0)
+O(o8, Pos(2, 11), cr=71, dl=99, cp=-1, val=10, tp=1)
+O(o9, Pos(0, 19), cr=90, dl=99, cp=-1, val=10, tp=0)
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	w3
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	w5	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	w1	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	w4	.	.	w2	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	#	#	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	#	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+
+210612-201413: Sending StartGameResponse(game=407968632, size=Pos(20, 20), workers=[W(w1, Pos(12, 14), 0), W(w2, Pos(7, 9), 0), W(w3, Pos(19, 1), 0), W(w4, Pos(10, 10), 0), W(w5, Pos(17, 9), 0)], obstacles: 3)
+210612-201413: Sending OrderMessage(game=407968632, order=O(o1, Pos(16, 15), cr=0, dl=20, cp=-1, val=10, tp=0))
+210612-201413: Sending OrderMessage(game=407968632, order=O(o2, Pos(12, 3), cr=0, dl=20, cp=-1, val=30, tp=0))
+210612-201415: Received TakeOrderMessage(game=407968632, order=o2, broker=a-d85167dff01)
+210612-201415: Sending TakeOrderConfirm(game=407968632, order=o2, broker=a-d85167dff01, SUCCESS)
+210612-201416: Received WorkerMessage(game=407968632, worker=w5, action=WEST)
+210612-201416: Sending WorkerConfirm(game=407968632, worker=w5, action=WEST, SUCCESS)
+210612-201417: Received WorkerMessage(game=407968632, worker=w5, action=WEST)
+210612-201417: Sending WorkerConfirm(game=407968632, worker=w5, action=WEST, SUCCESS)
+210612-201418: Received WorkerMessage(game=407968632, worker=w5, action=WEST)
+210612-201418: Sending WorkerConfirm(game=407968632, worker=w5, action=WEST, SUCCESS)
+210612-201419: Received WorkerMessage(game=407968632, worker=w5, action=WEST)
+210612-201419: Sending WorkerConfirm(game=407968632, worker=w5, action=WEST, SUCCESS)
+210612-201420: Received WorkerMessage(game=407968632, worker=w5, action=WEST)
+210612-201420: Sending WorkerConfirm(game=407968632, worker=w5, action=WEST, SUCCESS)
+210612-201421: Received WorkerMessage(game=407968632, worker=w5, action=NORTH)
+210612-201421: Sending WorkerConfirm(game=407968632, worker=w5, action=NORTH, SUCCESS)
+210612-201422: Received WorkerMessage(game=407968632, worker=w5, action=NORTH)
+210612-201422: Sending WorkerConfirm(game=407968632, worker=w5, action=NORTH, SUCCESS)
+210612-201423: Received WorkerMessage(game=407968632, worker=w5, action=NORTH)
+210612-201423: Sending WorkerConfirm(game=407968632, worker=w5, action=NORTH, SUCCESS)
+210612-201423: Sending OrderMessage(game=407968632, order=O(o3, Pos(1, 4), cr=10, dl=25, cp=-1, val=40, tp=2))
+210612-201424: Received WorkerMessage(game=407968632, worker=w5, action=NORTH)
+210612-201424: Sending WorkerConfirm(game=407968632, worker=w5, action=NORTH, SUCCESS)
+210612-201424: Sending OrderMessage(game=407968632, order=O(o4, Pos(0, 3), cr=11, dl=23, cp=-1, val=15, tp=1))
+210612-201425: Received WorkerMessage(game=407968632, worker=w5, action=NORTH)
+210612-201425: Sending WorkerConfirm(game=407968632, worker=w5, action=NORTH, SUCCESS)
+210612-201426: Received WorkerMessage(game=407968632, worker=w5, action=NORTH)
+210612-201426: Sending WorkerConfirm(game=407968632, worker=w5, action=NORTH, SUCCESS)
+210612-201427: Received WorkerMessage(game=407968632, worker=w5, action=ORDER)
+210612-201427: Sending WorkerConfirm(game=407968632, worker=w5, action=ORDER, SUCCESS)
+210612-201427: Sending OrderCompleted(game=407968632, order=o2, SUCCESS, reward=30)
+210612-201439: Sending OrderMessage(game=407968632, order=O(o5, Pos(4, 7), cr=25, dl=55, cp=-1, val=50, tp=0))
+210612-201440: Sending OrderMessage(game=407968632, order=O(o6, Pos(5, 13), cr=26, dl=45, cp=-1, val=55, tp=3))
+210612-201440: Received TakeOrderMessage(game=407968632, order=o5, broker=a-d85167dff01)
+210612-201440: Sending TakeOrderConfirm(game=407968632, order=o5, broker=a-d85167dff01, SUCCESS)
+210612-201441: Received WorkerMessage(game=407968632, worker=w1, action=WEST)
+210612-201441: Sending WorkerConfirm(game=407968632, worker=w1, action=WEST, SUCCESS)
+210612-201442: Received WorkerMessage(game=407968632, worker=w1, action=WEST)
+210612-201442: Sending WorkerConfirm(game=407968632, worker=w1, action=WEST, SUCCESS)
+210612-201443: Received WorkerMessage(game=407968632, worker=w1, action=WEST)
+210612-201443: Sending WorkerConfirm(game=407968632, worker=w1, action=WEST, SUCCESS)
+210612-201444: Received WorkerMessage(game=407968632, worker=w1, action=WEST)
+210612-201444: Sending WorkerConfirm(game=407968632, worker=w1, action=WEST, SUCCESS)
+210612-201445: Received WorkerMessage(game=407968632, worker=w1, action=WEST)
+210612-201445: Sending WorkerConfirm(game=407968632, worker=w1, action=WEST, SUCCESS)
+210612-201446: Received WorkerMessage(game=407968632, worker=w1, action=WEST)
+210612-201446: Sending WorkerConfirm(game=407968632, worker=w1, action=WEST, SUCCESS)
+210612-201447: Received WorkerMessage(game=407968632, worker=w1, action=WEST)
+210612-201447: Sending WorkerConfirm(game=407968632, worker=w1, action=WEST, SUCCESS)
+210612-201448: Received WorkerMessage(game=407968632, worker=w1, action=WEST)
+210612-201448: Sending WorkerConfirm(game=407968632, worker=w1, action=WEST, SUCCESS)
+210612-201449: Received WorkerMessage(game=407968632, worker=w1, action=NORTH)
+210612-201449: Sending WorkerConfirm(game=407968632, worker=w1, action=NORTH, SUCCESS)
+210612-201450: Received WorkerMessage(game=407968632, worker=w1, action=NORTH)
+210612-201450: Sending WorkerConfirm(game=407968632, worker=w1, action=NORTH, SUCCESS)
+210612-201451: Received WorkerMessage(game=407968632, worker=w1, action=NORTH)
+210612-201451: Sending WorkerConfirm(game=407968632, worker=w1, action=NORTH, SUCCESS)
+210612-201452: Received WorkerMessage(game=407968632, worker=w1, action=NORTH)
+210612-201452: Sending WorkerConfirm(game=407968632, worker=w1, action=NORTH, SUCCESS)
+210612-201453: Received WorkerMessage(game=407968632, worker=w1, action=NORTH)
+210612-201453: Sending WorkerConfirm(game=407968632, worker=w1, action=NORTH, SUCCESS)
+210612-201454: Received WorkerMessage(game=407968632, worker=w1, action=NORTH)
+210612-201454: Sending WorkerConfirm(game=407968632, worker=w1, action=NORTH, SUCCESS)
+210612-201455: Received WorkerMessage(game=407968632, worker=w1, action=NORTH)
+210612-201455: Sending WorkerConfirm(game=407968632, worker=w1, action=NORTH, SUCCESS)
+210612-201456: Received WorkerMessage(game=407968632, worker=w1, action=ORDER)
+210612-201456: Sending WorkerConfirm(game=407968632, worker=w1, action=ORDER, SUCCESS)
+210612-201456: Sending OrderCompleted(game=407968632, order=o5, SUCCESS, reward=50)
+210612-201514: Sending OrderMessage(game=407968632, order=O(o7, Pos(13, 10), cr=60, dl=77, cp=-1, val=5, tp=0))
+210612-201515: Received TakeOrderMessage(game=407968632, order=o7, broker=a-d85167dff01)
+210612-201515: Sending TakeOrderConfirm(game=407968632, order=o7, broker=a-d85167dff01, SUCCESS)
+210612-201516: Received WorkerMessage(game=407968632, worker=w2, action=SOUTH)
+210612-201516: Sending WorkerConfirm(game=407968632, worker=w2, action=SOUTH, SUCCESS)
+210612-201517: Received WorkerMessage(game=407968632, worker=w2, action=EAST)
+210612-201517: Sending WorkerConfirm(game=407968632, worker=w2, action=EAST, SUCCESS)
+210612-201518: Received WorkerMessage(game=407968632, worker=w2, action=EAST)
+210612-201518: Sending WorkerConfirm(game=407968632, worker=w2, action=EAST, SUCCESS)
+210612-201519: Received WorkerMessage(game=407968632, worker=w2, action=EAST)
+210612-201519: Sending WorkerConfirm(game=407968632, worker=w2, action=EAST, SUCCESS)
+210612-201520: Received WorkerMessage(game=407968632, worker=w2, action=EAST)
+210612-201520: Sending WorkerConfirm(game=407968632, worker=w2, action=EAST, SUCCESS)
+210612-201521: Received WorkerMessage(game=407968632, worker=w2, action=EAST)
+210612-201521: Sending WorkerConfirm(game=407968632, worker=w2, action=EAST, SUCCESS)
+210612-201522: Received WorkerMessage(game=407968632, worker=w2, action=EAST)
+210612-201522: Sending WorkerConfirm(game=407968632, worker=w2, action=EAST, SUCCESS)
+210612-201523: Received WorkerMessage(game=407968632, worker=w2, action=ORDER)
+210612-201523: Sending WorkerConfirm(game=407968632, worker=w2, action=ORDER, SUCCESS)
+210612-201523: Sending OrderCompleted(game=407968632, order=o7, SUCCESS, reward=5)
+210612-201525: Sending OrderMessage(game=407968632, order=O(o8, Pos(2, 11), cr=71, dl=99, cp=-1, val=10, tp=1))
+210612-201544: Sending OrderMessage(game=407968632, order=O(o9, Pos(0, 19), cr=90, dl=99, cp=-1, val=10, tp=0))
+210612-201555: Sending WorkerScoreMessage(game=407968632, worker=w1, winner?=true, orders completed=1)
+210612-201555: Sending WorkerScoreMessage(game=407968632, worker=w2, winner?=false, orders completed=1)
+210612-201555: Sending WorkerScoreMessage(game=407968632, worker=w3, winner?=false, orders completed=0)
+210612-201555: Sending WorkerScoreMessage(game=407968632, worker=w4, winner?=false, orders completed=0)
+210612-201555: Sending WorkerScoreMessage(game=407968632, worker=w5, winner?=false, orders completed=1)
+210612-201555: Sending EndGameMessage(game=407968632, broker=a-d85167dff01, winner?=true, reward=52,00)
+

@@ -1,0 +1,109 @@
+210612-194434
+GAME No. 1600590714
+TURN 101/100
+Brokers
+B(a-bcedf8b52f2, workers=[W(w1, Pos(16, 15), 0), W(w2, Pos(4, 7), 0), W(w3, Pos(12, 3), 0), W(w4, Pos(13, 10), 0), W(w5, Pos(17, 9), 0)], taken=[], completed=[], failed=[o1, o2, o5, o7])
+Orders
+O(o1, Pos(16, 15), cr=0, dl=20, cp=-1, val=10, tp=0)
+O(o2, Pos(12, 3), cr=0, dl=20, cp=-1, val=30, tp=0)
+O(o3, Pos(1, 4), cr=10, dl=25, cp=-1, val=40, tp=2)
+O(o4, Pos(0, 3), cr=11, dl=23, cp=-1, val=15, tp=1)
+O(o5, Pos(4, 7), cr=25, dl=55, cp=-1, val=50, tp=0)
+O(o6, Pos(5, 13), cr=26, dl=45, cp=-1, val=55, tp=3)
+O(o7, Pos(13, 10), cr=60, dl=77, cp=-1, val=5, tp=0)
+O(o8, Pos(2, 11), cr=71, dl=99, cp=-1, val=10, tp=1)
+O(o9, Pos(0, 19), cr=90, dl=99, cp=-1, val=10, tp=0)
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	w3	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	w2	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	w5	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	w4	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	w1	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	#	#	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	#	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+
+210612-194252: Sending StartGameResponse(game=1600590714, size=Pos(20, 20), workers=[W(w1, Pos(12, 14), 0), W(w2, Pos(7, 9), 0), W(w3, Pos(19, 1), 0), W(w4, Pos(10, 10), 0), W(w5, Pos(17, 9), 0)], obstacles: 3)
+210612-194252: Sending OrderMessage(game=1600590714, order=O(o1, Pos(16, 15), cr=0, dl=20, cp=-1, val=10, tp=0))
+210612-194252: Sending OrderMessage(game=1600590714, order=O(o2, Pos(12, 3), cr=0, dl=20, cp=-1, val=30, tp=0))
+210612-194254: Received TakeOrderMessage(game=1600590714, order=o1, broker=a-bcedf8b52f2)
+210612-194254: Sending TakeOrderConfirm(game=1600590714, order=o1, broker=a-bcedf8b52f2, SUCCESS)
+210612-194254: Received TakeOrderMessage(game=1600590714, order=o2, broker=a-bcedf8b52f2)
+210612-194254: Sending TakeOrderConfirm(game=1600590714, order=o2, broker=a-bcedf8b52f2, SUCCESS)
+210612-194255: Received WorkerMessage(game=1600590714, worker=w1, action=SOUTH)
+210612-194255: Sending WorkerConfirm(game=1600590714, worker=w1, action=SOUTH, SUCCESS)
+210612-194255: Received WorkerMessage(game=1600590714, worker=w3, action=WEST)
+210612-194255: Sending WorkerConfirm(game=1600590714, worker=w3, action=WEST, SUCCESS)
+210612-194256: Received WorkerMessage(game=1600590714, worker=w3, action=WEST)
+210612-194256: Sending WorkerConfirm(game=1600590714, worker=w3, action=WEST, SUCCESS)
+210612-194256: Received WorkerMessage(game=1600590714, worker=w1, action=EAST)
+210612-194256: Sending WorkerConfirm(game=1600590714, worker=w1, action=EAST, SUCCESS)
+210612-194257: Received WorkerMessage(game=1600590714, worker=w3, action=WEST)
+210612-194257: Sending WorkerConfirm(game=1600590714, worker=w3, action=WEST, SUCCESS)
+210612-194257: Received WorkerMessage(game=1600590714, worker=w1, action=EAST)
+210612-194257: Sending WorkerConfirm(game=1600590714, worker=w1, action=EAST, SUCCESS)
+210612-194258: Received WorkerMessage(game=1600590714, worker=w3, action=WEST)
+210612-194258: Sending WorkerConfirm(game=1600590714, worker=w3, action=WEST, SUCCESS)
+210612-194258: Received WorkerMessage(game=1600590714, worker=w1, action=EAST)
+210612-194258: Sending WorkerConfirm(game=1600590714, worker=w1, action=EAST, SUCCESS)
+210612-194259: Received WorkerMessage(game=1600590714, worker=w3, action=WEST)
+210612-194259: Sending WorkerConfirm(game=1600590714, worker=w3, action=WEST, SUCCESS)
+210612-194259: Received WorkerMessage(game=1600590714, worker=w1, action=EAST)
+210612-194259: Sending WorkerConfirm(game=1600590714, worker=w1, action=EAST, SUCCESS)
+210612-194300: Received WorkerMessage(game=1600590714, worker=w3, action=WEST)
+210612-194300: Sending WorkerConfirm(game=1600590714, worker=w3, action=WEST, SUCCESS)
+210612-194301: Received WorkerMessage(game=1600590714, worker=w3, action=WEST)
+210612-194301: Sending WorkerConfirm(game=1600590714, worker=w3, action=WEST, SUCCESS)
+210612-194302: Received WorkerMessage(game=1600590714, worker=w3, action=SOUTH)
+210612-194302: Sending WorkerConfirm(game=1600590714, worker=w3, action=SOUTH, SUCCESS)
+210612-194302: Sending OrderMessage(game=1600590714, order=O(o3, Pos(1, 4), cr=10, dl=25, cp=-1, val=40, tp=2))
+210612-194303: Received WorkerMessage(game=1600590714, worker=w3, action=SOUTH)
+210612-194303: Sending WorkerConfirm(game=1600590714, worker=w3, action=SOUTH, SUCCESS)
+210612-194303: Sending OrderMessage(game=1600590714, order=O(o4, Pos(0, 3), cr=11, dl=23, cp=-1, val=15, tp=1))
+210612-194313: Sending OrderCompleted(game=1600590714, order=o1, FAIL, reward=-10)
+210612-194313: Sending OrderCompleted(game=1600590714, order=o2, FAIL, reward=-30)
+210612-194317: Sending OrderMessage(game=1600590714, order=O(o5, Pos(4, 7), cr=25, dl=55, cp=-1, val=50, tp=0))
+210612-194318: Sending OrderMessage(game=1600590714, order=O(o6, Pos(5, 13), cr=26, dl=45, cp=-1, val=55, tp=3))
+210612-194319: Received TakeOrderMessage(game=1600590714, order=o5, broker=a-bcedf8b52f2)
+210612-194319: Sending TakeOrderConfirm(game=1600590714, order=o5, broker=a-bcedf8b52f2, SUCCESS)
+210612-194320: Received WorkerMessage(game=1600590714, worker=w2, action=WEST)
+210612-194320: Sending WorkerConfirm(game=1600590714, worker=w2, action=WEST, SUCCESS)
+210612-194321: Received WorkerMessage(game=1600590714, worker=w2, action=WEST)
+210612-194321: Sending WorkerConfirm(game=1600590714, worker=w2, action=WEST, SUCCESS)
+210612-194322: Received WorkerMessage(game=1600590714, worker=w2, action=WEST)
+210612-194322: Sending WorkerConfirm(game=1600590714, worker=w2, action=WEST, SUCCESS)
+210612-194323: Received WorkerMessage(game=1600590714, worker=w2, action=NORTH)
+210612-194323: Sending WorkerConfirm(game=1600590714, worker=w2, action=NORTH, SUCCESS)
+210612-194324: Received WorkerMessage(game=1600590714, worker=w2, action=NORTH)
+210612-194324: Sending WorkerConfirm(game=1600590714, worker=w2, action=NORTH, SUCCESS)
+210612-194348: Sending OrderCompleted(game=1600590714, order=o5, FAIL, reward=-50)
+210612-194352: Sending OrderMessage(game=1600590714, order=O(o7, Pos(13, 10), cr=60, dl=77, cp=-1, val=5, tp=0))
+210612-194354: Received TakeOrderMessage(game=1600590714, order=o7, broker=a-bcedf8b52f2)
+210612-194354: Sending TakeOrderConfirm(game=1600590714, order=o7, broker=a-bcedf8b52f2, SUCCESS)
+210612-194355: Received WorkerMessage(game=1600590714, worker=w4, action=EAST)
+210612-194355: Sending WorkerConfirm(game=1600590714, worker=w4, action=EAST, SUCCESS)
+210612-194356: Received WorkerMessage(game=1600590714, worker=w4, action=EAST)
+210612-194356: Sending WorkerConfirm(game=1600590714, worker=w4, action=EAST, SUCCESS)
+210612-194357: Received WorkerMessage(game=1600590714, worker=w4, action=EAST)
+210612-194357: Sending WorkerConfirm(game=1600590714, worker=w4, action=EAST, SUCCESS)
+210612-194403: Sending OrderMessage(game=1600590714, order=O(o8, Pos(2, 11), cr=71, dl=99, cp=-1, val=10, tp=1))
+210612-194410: Sending OrderCompleted(game=1600590714, order=o7, FAIL, reward=-5)
+210612-194422: Sending OrderMessage(game=1600590714, order=O(o9, Pos(0, 19), cr=90, dl=99, cp=-1, val=10, tp=0))
+210612-194434: Sending WorkerScoreMessage(game=1600590714, worker=w1, winner?=true, orders completed=0)
+210612-194434: Sending WorkerScoreMessage(game=1600590714, worker=w2, winner?=false, orders completed=0)
+210612-194434: Sending WorkerScoreMessage(game=1600590714, worker=w3, winner?=false, orders completed=0)
+210612-194434: Sending WorkerScoreMessage(game=1600590714, worker=w4, winner?=false, orders completed=0)
+210612-194434: Sending WorkerScoreMessage(game=1600590714, worker=w5, winner?=false, orders completed=0)
+210612-194434: Sending EndGameMessage(game=1600590714, broker=a-bcedf8b52f2, winner?=true, reward=-117,00)
+
