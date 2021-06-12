@@ -1,8 +1,10 @@
 package de.dailab.jiactng.aot.gridworld.messages;
 
+import de.dailab.jiactng.agentcore.comm.ICommunicationAddress;
 import de.dailab.jiactng.aot.gridworld.model.Position;
 import de.dailab.jiactng.aot.gridworld.model.Worker;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -30,6 +32,9 @@ public class ACOMessage extends GameMessage {
 
     /** initial list of workers available to the bidder */
     public List<Worker> initialWorkers;
+
+    /** initial list of workerAddressList available to the bidder */
+    public ArrayList<ICommunicationAddress> workerAddressList;
 
     /** optional list of obstacles on the map; can be null if obstacles are only
      *  revealed when bumping into them; empty list means no obstacles on the map */
