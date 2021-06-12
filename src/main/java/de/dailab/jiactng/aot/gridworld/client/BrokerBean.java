@@ -70,7 +70,7 @@ public class BrokerBean extends AbstractAgentBean {
 			if (!isGameStarted) {
 				StartGameMessage startGameMessage = new StartGameMessage();
 				startGameMessage.brokerId = thisAgent.getAgentId();
-				startGameMessage.gridFile = "/grids/example.grid";
+				startGameMessage.gridFile = "/grids/04_1.grid";
 				sendMessage(server, startGameMessage);
 
 				this.isGameStarted = true;
@@ -154,6 +154,16 @@ public class BrokerBean extends AbstractAgentBean {
 
 				/* TODO iterative Contract Net Protocol call-for-proposals for the orders */
 
+			}
+
+			/**
+			 * This means the Worker could not handle the message yet and wants to receive it again
+			 * Therefore, simply send it again to the Worker
+			 */
+			if (payload instanceof AuctionMessage) {
+				AuctionMessage auctionMessage = (AuctionMessage) message.getPayload();
+				ICommunicationAddress workerAdress = message.getSender();
+				sendMessage(workerAdress, auctionMessage);
 			}
 
 			if (payload instanceof ACOConfirm) {

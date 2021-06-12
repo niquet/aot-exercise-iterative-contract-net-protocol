@@ -188,7 +188,14 @@ public class WorkerBean extends AbstractAgentBean {
                             else auctionResponse.status = Result.SUCCESS;
                         }
                         sendMessage(broker, auctionResponse);
+                    } else {
+                        AuctionMessage sendAgain = new AuctionMessage();
+                        sendAgain.orderId = auctionMessage.orderId;
+                        sendAgain.deadline =  auctionMessage.deadline;
+                        sendAgain.orderPosition =  auctionMessage.orderPosition;
+                        sendMessage(broker, auctionMessage);
                     }
+
                 }
 
                 if (payload instanceof DefinitivBidMessage) {
@@ -307,7 +314,7 @@ public class WorkerBean extends AbstractAgentBean {
     /**
      * calculate next move
      */
-    private WorkerAction getNextMove(Position current, Position target, Boolean lastMoveFailed) {
+    private WorkerAction getNextMove_old(Position current, Position target, Boolean lastMoveFailed) {
         // TODO
         if (current.equals(target)) {
             hasArrivedAtTarget = true;
@@ -382,7 +389,8 @@ public class WorkerBean extends AbstractAgentBean {
 
     private Position getNextMove() {
         if (path != null && path.size() > 0) {
-            Position move = new Position(path.get(0).getCol(), path.get(0).getRow());
+            Position move = new Position(path.get(0).getRow(), path.get(0).getCol());
+
             path.remove(path.get(0));
             return move;
         }
