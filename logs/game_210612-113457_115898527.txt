@@ -1,0 +1,70 @@
+210612-113457
+GAME No. 115898527
+TURN 101/100
+Brokers
+B(a-3e66a9169d7, workers=[W(w1, Pos(12, 14), 0), W(w2, Pos(7, 9), 0), W(w3, Pos(14, 3), 0), W(w4, Pos(10, 10), 0), W(w5, Pos(17, 9), 0)], taken=[], completed=[], failed=[o2])
+Orders
+O(o1, Pos(16, 15), cr=0, dl=20, cp=-1, val=10, tp=0)
+O(o2, Pos(12, 3), cr=0, dl=20, cp=-1, val=30, tp=0)
+O(o3, Pos(1, 4), cr=10, dl=25, cp=-1, val=40, tp=2)
+O(o4, Pos(0, 3), cr=11, dl=23, cp=-1, val=15, tp=1)
+O(o5, Pos(4, 7), cr=25, dl=55, cp=-1, val=50, tp=0)
+O(o6, Pos(5, 13), cr=26, dl=45, cp=-1, val=55, tp=3)
+O(o7, Pos(13, 10), cr=60, dl=77, cp=-1, val=5, tp=0)
+O(o8, Pos(2, 11), cr=71, dl=99, cp=-1, val=10, tp=1)
+O(o9, Pos(0, 19), cr=90, dl=99, cp=-1, val=10, tp=0)
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	w3	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	w2	.	.	.	.	.	.	.	.	.	w5	.	.
+	.	.	.	.	.	.	.	.	.	.	w4	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	w1	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	#	#	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	#	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+
+210612-113315: Sending StartGameResponse(game=115898527, size=Pos(20, 20), workers=[W(w1, Pos(12, 14), 0), W(w2, Pos(7, 9), 0), W(w3, Pos(19, 1), 0), W(w4, Pos(10, 10), 0), W(w5, Pos(17, 9), 0)], obstacles: 3)
+210612-113315: Sending OrderMessage(game=115898527, order=O(o1, Pos(16, 15), cr=0, dl=20, cp=-1, val=10, tp=0))
+210612-113315: Sending OrderMessage(game=115898527, order=O(o2, Pos(12, 3), cr=0, dl=20, cp=-1, val=30, tp=0))
+210612-113317: Received WorkerMessage(game=115898527, worker=w3, action=SOUTH)
+210612-113317: Sending WorkerConfirm(game=115898527, worker=w3, action=SOUTH, SUCCESS)
+210612-113317: Received TakeOrderMessage(game=115898527, order=o2, broker=a-3e66a9169d7)
+210612-113317: Sending TakeOrderConfirm(game=115898527, order=o2, broker=a-3e66a9169d7, SUCCESS)
+210612-113318: Received WorkerMessage(game=115898527, worker=w3, action=SOUTH)
+210612-113318: Sending WorkerConfirm(game=115898527, worker=w3, action=SOUTH, SUCCESS)
+210612-113319: Received WorkerMessage(game=115898527, worker=w3, action=WEST)
+210612-113319: Sending WorkerConfirm(game=115898527, worker=w3, action=WEST, SUCCESS)
+210612-113320: Received WorkerMessage(game=115898527, worker=w3, action=WEST)
+210612-113320: Sending WorkerConfirm(game=115898527, worker=w3, action=WEST, SUCCESS)
+210612-113321: Received WorkerMessage(game=115898527, worker=w3, action=WEST)
+210612-113321: Sending WorkerConfirm(game=115898527, worker=w3, action=WEST, SUCCESS)
+210612-113322: Received WorkerMessage(game=115898527, worker=w3, action=WEST)
+210612-113322: Sending WorkerConfirm(game=115898527, worker=w3, action=WEST, SUCCESS)
+210612-113323: Received WorkerMessage(game=115898527, worker=w3, action=WEST)
+210612-113323: Sending WorkerConfirm(game=115898527, worker=w3, action=WEST, SUCCESS)
+210612-113325: Sending OrderMessage(game=115898527, order=O(o3, Pos(1, 4), cr=10, dl=25, cp=-1, val=40, tp=2))
+210612-113326: Sending OrderMessage(game=115898527, order=O(o4, Pos(0, 3), cr=11, dl=23, cp=-1, val=15, tp=1))
+210612-113337: Sending OrderCompleted(game=115898527, order=o2, FAIL, reward=-30)
+210612-113341: Sending OrderMessage(game=115898527, order=O(o5, Pos(4, 7), cr=25, dl=55, cp=-1, val=50, tp=0))
+210612-113342: Sending OrderMessage(game=115898527, order=O(o6, Pos(5, 13), cr=26, dl=45, cp=-1, val=55, tp=3))
+210612-113416: Sending OrderMessage(game=115898527, order=O(o7, Pos(13, 10), cr=60, dl=77, cp=-1, val=5, tp=0))
+210612-113427: Sending OrderMessage(game=115898527, order=O(o8, Pos(2, 11), cr=71, dl=99, cp=-1, val=10, tp=1))
+210612-113446: Sending OrderMessage(game=115898527, order=O(o9, Pos(0, 19), cr=90, dl=99, cp=-1, val=10, tp=0))
+210612-113457: Sending WorkerScoreMessage(game=115898527, worker=w1, winner?=true, orders completed=0)
+210612-113457: Sending WorkerScoreMessage(game=115898527, worker=w2, winner?=false, orders completed=0)
+210612-113457: Sending WorkerScoreMessage(game=115898527, worker=w3, winner?=false, orders completed=0)
+210612-113457: Sending WorkerScoreMessage(game=115898527, worker=w4, winner?=false, orders completed=0)
+210612-113457: Sending WorkerScoreMessage(game=115898527, worker=w5, winner?=false, orders completed=0)
+210612-113457: Sending EndGameMessage(game=115898527, broker=a-3e66a9169d7, winner?=true, reward=-37,00)
+
