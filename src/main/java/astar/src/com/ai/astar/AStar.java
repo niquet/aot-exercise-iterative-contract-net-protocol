@@ -57,12 +57,12 @@ public class AStar {
         }
     }
 
-    public List<Node> findPath() {
+    public List<Node> findPath(Node initialNode, Node finalNode) {
         openList.add(initialNode);
         while (!isEmpty(openList)) {
             Node currentNode = openList.poll();
             closedSet.add(currentNode);
-            if (isFinalNode(currentNode)) {
+            if (currentNode.equals(finalNode)) {
                 return getPath(currentNode);
             } else {
                 addAdjacentNodes(currentNode);

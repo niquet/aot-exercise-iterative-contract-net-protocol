@@ -12,7 +12,7 @@ public class AStarTest {
         AStar aStar = new AStar(rows, cols, initialNode, finalNode);
         int[][] blocksArray = new int[][]{{1, 3}, {2, 3}, {3, 3}};
         aStar.setBlocks(blocksArray);
-        List<Node> path = aStar.findPath();
+        List<Node> path = aStar.findPath(initialNode, finalNode);
         for (Node node : path) {
             System.out.println(node);
         }

@@ -40,6 +40,8 @@ public class WorkerBean extends AbstractAgentBean {
         }
     };
     private final PriorityQueue<Order> priorityQueue = new PriorityQueue<>(compareOrder);
+    private PriorityQueue<Order> priorityQueueForBidding = new PriorityQueue<>(priorityQueue);
+
     private Order handleOrder = null;
     private Boolean hasArrivedAtTarget = false;
     private Integer gameId = null;
@@ -255,23 +257,21 @@ public class WorkerBean extends AbstractAgentBean {
 
                     int zeit = time;
                     int distance = 0;
-                    Order order = new Order();
-                    order.id = bid.orderId;
-                    order.position = bid.orderPosition;
-                    order.deadline = bid.deadlineOffer;
+                    Order bidOrder = new Order();
+                    bidOrder.id = bid.orderId;
+                    bidOrder.position = bid.orderPosition;
+                    bidOrder.deadline = bid.deadlineOffer;
 
-                    PriorityQueue<Order> priorityQueueCopy = new PriorityQueue<>(priorityQueue);
-                    priorityQueueCopy.add(order);
-                    for(Order orderInQueue: priorityQueueCopy) {
+                    for(Order orderInQueue: priorityQueueForBidding) {
                         distance = aStarDistance(goal, orderInQueue.position) + 1;
                         zeit += distance;
-                        if (order.id.equals(orderInQueue.id)) {
+                        if (bid.orderId.equals(orderInQueue.id)) {
                             break;
                         }
                         goal = orderInQueue.position;
                     }
 
-                    answer.deadlineOffer = zeit;
+                    answer.deadlineOffer = zeit + 1;
                     answer.status = Result.SUCCESS;
 
                     if (bid.orderPosition == null) {
@@ -279,7 +279,9 @@ public class WorkerBean extends AbstractAgentBean {
                     } else {
                         // TODO ???
                         int deadline = aStarDistance(position, bid.orderPosition) + time;
-                        if (bid.deadlineOffer < deadline) answer.status = Result.FAIL;
+                        if (bid.deadlineOffer < deadline) {
+                            answer.status = Result.FAIL;
+                        }
                     }
 
                     sendMessage(broker, answer);
@@ -288,6 +290,12 @@ public class WorkerBean extends AbstractAgentBean {
                 if (payload instanceof DefinitivRejectMessage) {
                     DefinitivRejectMessage reject = (DefinitivRejectMessage) message.getPayload();
                     // TODO
+                    for(Order orderInQueue: priorityQueueForBidding) {
+                        if (reject.order.id.equals(orderInQueue.id)) {
+                            priorityQueueForBidding.remove(orderInQueue);
+                            break;
+                        }
+                    }
                 }
 
                 if (payload instanceof WorkerConfirm) {
@@ -481,7 +489,9 @@ public class WorkerBean extends AbstractAgentBean {
      * QUELLE: https://github.com/marcelo-s/A-Star-Java-Implementation
      */
     private void aStar(Position start, Position target) {
-        this.astar = new AStar(gridSize.x, gridSize.y, new Node(start.x, start.y), new Node(target.x, target.y), 1, Integer.MAX_VALUE);
+        Node initialNode = new Node(start.x, start.y);
+        Node finalNode = new Node(target.x, target.y);
+        this.astar = new AStar(gridSize.x, gridSize.y, initialNode, finalNode, 1, Integer.MAX_VALUE);
 
         int[][] obsts = new int[obstacles.size()][2];
         int i = 0;
@@ -492,7 +502,7 @@ public class WorkerBean extends AbstractAgentBean {
         }
         astar.setBlocks(obsts);
 
-        path = astar.findPath();
+        path = astar.findPath(initialNode, finalNode);
         if (path.size() > 1) {
             path.remove(path.get(0));
         }
@@ -511,7 +521,7 @@ public class WorkerBean extends AbstractAgentBean {
         this.astar.setInitialNode(initialNode);
         this.astar.setFinalNode(finalNode);
 
-        this.path = astar.findPath();
+        this.path = astar.findPath(initialNode, finalNode);
         if (path.size() > 0) {
             path.remove(path.get(0));
         }
@@ -529,10 +539,7 @@ public class WorkerBean extends AbstractAgentBean {
         Node initialNode = new Node(start.x, start.y);
         Node finalNode = new Node(target.x, target.y);
 
-        this.astar.setInitialNode(initialNode);
-        this.astar.setFinalNode(finalNode);
-
-        return astar.findPath().size() - 1;
+        return astar.findPath(initialNode, finalNode).size() - 1;
 
     }
 
@@ -585,9 +592,8 @@ public class WorkerBean extends AbstractAgentBean {
         int distance = 0;
         /* TODO wo rein damit gewinn maximiert ?? */
 
-        PriorityQueue<Order> priorityQueueCopy = new PriorityQueue<>(priorityQueue);
-        priorityQueueCopy.add(order);
-        for(Order orderInQueue: priorityQueueCopy) {
+        priorityQueueForBidding.add(order);
+        for(Order orderInQueue: priorityQueueForBidding) {
             distance = aStarDistance(goal, orderInQueue.position) + 1;
             zeit += distance;
             if (zeit > orderInQueue.deadline) {
