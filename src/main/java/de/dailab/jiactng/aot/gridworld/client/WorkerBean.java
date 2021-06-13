@@ -172,7 +172,6 @@ public class WorkerBean extends AbstractAgentBean {
                     assignOrderConfirm.orderId = order.id;
                     assignOrderConfirm.gameId = assignOrderMessage.gameId;
                     assignOrderConfirm.workerId = thisAgent.getAgentId();
-                    assignOrderConfirm.state = Result.FAIL;
 
                     orderToAddress.put(order, server);
                     priorityQueue.add(order);
@@ -237,7 +236,6 @@ public class WorkerBean extends AbstractAgentBean {
 
                     if (bid.orderPosition == null) System.out.println("ORDER POSITION NULL");
                     else {
-                        // TODO ???
                         if (bid.deadlineOffer < possibleEnd(bid.orderPosition)) answer.status = Result.FAIL;
                     }
 
