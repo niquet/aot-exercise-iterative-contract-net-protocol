@@ -40,13 +40,11 @@ public class WorkerBean extends AbstractAgentBean {
         }
     };
     private final PriorityQueue<Order> priorityQueue = new PriorityQueue<>(compareOrder);
-    private final PriorityQueue<Order> incomeOrders = new PriorityQueue<>(compareOrder);
     private Order handleOrder = null;
     private Boolean hasArrivedAtTarget = false;
     private Integer gameId = null;
     private Position gridSize = null;
     private Set<Position> obstacles = null;
-    private Integer estimatedRemainingTime = 0;
     private Position estimatedDestination = null;
 
     private Position position = null;
@@ -56,10 +54,11 @@ public class WorkerBean extends AbstractAgentBean {
 
     private String workerIdForServer = null;
     private ICommunicationAddress broker = null;
-    private ICommunicationAddress server = null;
     private int time;
 
+    // TODO remove the obstacle messaging for now
     private ArrayList<ICommunicationAddress> otherWorkers = null;
+    private AStar astar = null;
 
     @Override
     public void doStart() throws Exception {
@@ -94,7 +93,7 @@ public class WorkerBean extends AbstractAgentBean {
             }
             /* Kann durch den ACO Worker alles geändert werden, aber für funktionalität lass ich es erstmal so */
 
-            if (position.equals(firstOrder.position)) {
+            if (position.equals(priorityQueue.peek().position)) {
                 WorkerMessage move = new WorkerMessage();
                 move.action = WorkerAction.ORDER;
                 move.gameId = gameId;
@@ -102,18 +101,18 @@ public class WorkerBean extends AbstractAgentBean {
                 hasArrivedAtTarget = true;
 
                 sendMessage(orderToAddress.get(priorityQueue.peek()), move);
-            } else {
-                WorkerMessage move = new WorkerMessage();
-                aStar(position, firstOrder.position);
-                Position nextMove = getNextMove();
-                if (nextMove != null) {
-                    move.action = getMoveAction(position, nextMove);
-                    lastMove = move.action;
-                    move.gameId = gameId;
-                    move.workerId = workerIdForServer;
+            }
 
-                    sendMessage(orderToAddress.get(firstOrder), move);
-                }
+            WorkerMessage move = new WorkerMessage();
+            aStarUpdate(position, firstOrder.position);
+            Position nextMove = getNextMove();
+            if (nextMove != null) {
+                move.action = getMoveAction(position, nextMove);
+                lastMove = move.action;
+                move.gameId = gameId;
+                move.workerId = workerIdForServer;
+
+                sendMessage(orderToAddress.get(firstOrder), move);
             }
 
         }
@@ -140,7 +139,6 @@ public class WorkerBean extends AbstractAgentBean {
                     position = acoMessage.position;
                     gameId = acoMessage.gameId;
                     broker = message.getSender();
-                    server = acoMessage.server;
                     gridSize = acoMessage.size;
                     obstacles = acoMessage.obstacles;
                     if (otherWorkers == null) {
@@ -177,12 +175,17 @@ public class WorkerBean extends AbstractAgentBean {
                     assignOrderConfirm.state = Result.FAIL;
 
                     orderToAddress.put(order, server);
-                    if(!priorityQueue.contains(order)) priorityQueue.add(order);
+                    priorityQueue.add(order);
                     assignOrderConfirm.state = Result.SUCCESS;
 
-                    /* Unwichtig - handleorder wird nicht mehr genutzt */
-                    if (priorityQueue.contains(order) && handleOrder == null)
-                        handleOrder = order;
+                    if (handleOrder == null) {
+                        handleOrder = priorityQueue.peek();
+                        aStar(position, handleOrder.position);
+                    } else {
+                        handleOrder = priorityQueue.peek();
+                        aStarUpdate(position, handleOrder.position);
+                    }
+
                     sendMessage(broker, assignOrderConfirm);
                 }
 
@@ -191,7 +194,7 @@ public class WorkerBean extends AbstractAgentBean {
                     AuctionMessage auctionMessage = (AuctionMessage) message.getPayload();
                     broker = message.getSender();
                     if (position != null) {
-                        /* Calculated distance, considering already taken Assignments, hier Intelligenz einbauen */
+                        /* TODO Calculated distance, considering already taken Assignments, hier Intelligenz einbauen */
                         AuctionResponse auctionResponse = new AuctionResponse();
                         auctionResponse.orderId = auctionMessage.orderId;
                         auctionResponse.gameId = gameId;
@@ -199,16 +202,17 @@ public class WorkerBean extends AbstractAgentBean {
                         if (auctionMessage.orderPosition == null || position == null) {
                             auctionResponse.status = Result.FAIL;
                         } else {
-                            auctionResponse.deadlineOffer = possibleEnd(auctionMessage.orderPosition) + time;
-                            if (auctionResponse.deadlineOffer >= auctionMessage.deadline)
+                            Order order = new Order();
+                            order.position = auctionMessage.orderPosition;
+                            order.deadline = auctionMessage.deadline;
+                            order.id = auctionMessage.orderId;
+
+                            int isGoodOrder = evaluateOrder(order);
+                            auctionResponse.deadlineOffer = isGoodOrder;
+
+                            if (auctionResponse.deadlineOffer >= auctionMessage.deadline || isGoodOrder == -1) {
                                 auctionResponse.status = Result.FAIL;
-                            else {
-                                Order neu = new Order();
-                                neu.deadline = auctionMessage.deadline;
-                                neu.position = auctionMessage.orderPosition;
-                                neu.id = auctionMessage.orderId;
-                                incomeOrders.add(neu);
-                                orderToAddress.put(neu, server);
+                            } else {
                                 auctionResponse.status = Result.SUCCESS;
                             }
                         }
@@ -233,6 +237,7 @@ public class WorkerBean extends AbstractAgentBean {
 
                     if (bid.orderPosition == null) System.out.println("ORDER POSITION NULL");
                     else {
+                        // TODO ???
                         if (bid.deadlineOffer < possibleEnd(bid.orderPosition)) answer.status = Result.FAIL;
                     }
 
@@ -241,18 +246,7 @@ public class WorkerBean extends AbstractAgentBean {
 
                 if (payload instanceof DefinitivRejectMessage) {
                     DefinitivRejectMessage reject = (DefinitivRejectMessage) message.getPayload();
-                    for (Order order : priorityQueue) {
-                        if (order.id.equals(reject.order.id)) {
-                            priorityQueue.remove(order);
-                            break;
-                        }
-                    }
-                    for (Order order : incomeOrders) {
-                        if (order.id.equals(reject.order.id)) {
-                            incomeOrders.remove(order);
-                            break;
-                        }
-                    }
+                    if (priorityQueue.contains(reject.order)) priorityQueue.remove(reject.order);
                 }
 
                 if (payload instanceof WorkerConfirm) {
@@ -268,7 +262,7 @@ public class WorkerBean extends AbstractAgentBean {
                     }
 
                     if (result == Result.FAIL) {
-                        // unbekannte obstacles
+                        // TODO unbekannte obstacles
                         if (workerConfirm.action != WorkerAction.ORDER) {
                             lastMoveFailed = true;
                             for (ICommunicationAddress workerAddress : otherWorkers) {
@@ -296,7 +290,7 @@ public class WorkerBean extends AbstractAgentBean {
                     }
                     obstacles.add(((ObstacleUpdate) payload).position);
                     if (handleOrder != null) {
-                        aStar(position, handleOrder.position);
+                        aStarUpdate(position, handleOrder.position);
                     }
 
 
@@ -312,10 +306,10 @@ public class WorkerBean extends AbstractAgentBean {
         /* TODO wo rein damit gewinn maximiert ?? */
 
         for (Order order : this.priorityQueue) {
-            zeit += aStarDistance(order.position,goal) + 1;
+            zeit += aStarDistance(goal, order.position) + 1;
             goal = order.position;
         }
-        zeit += aStarDistance(target, goal);
+        zeit += aStarDistance(goal, target);
         return zeit;
     }
 
@@ -327,22 +321,6 @@ public class WorkerBean extends AbstractAgentBean {
         JiacMessage message = new JiacMessage(payload);
         invoke(sendAction, new Serializable[]{message, receiver});
         System.out.println("WORKER SENDING " + payload);
-    }
-
-    /**
-     * sort the orders according to a score and put them into a queue
-     */
-    private void sortOrders() {
-        // TODO
-    }
-
-    /**
-     * evaluate order score
-     */
-    private void evaluateOrder(Order order) {
-        // TODO
-
-
     }
 
     /**
@@ -456,7 +434,7 @@ public class WorkerBean extends AbstractAgentBean {
      * QUELLE: https://github.com/marcelo-s/A-Star-Java-Implementation
      */
     private void aStar(Position start, Position target) {
-        AStar astar = new AStar(gridSize.x, gridSize.y, new Node(start.x, start.y), new Node(target.x, target.y), 1, Integer.MAX_VALUE);
+        this.astar = new AStar(gridSize.x, gridSize.y, new Node(start.x, start.y), new Node(target.x, target.y), 1, Integer.MAX_VALUE);
 
         int[][] obsts = new int[obstacles.size()][2];
         int i = 0;
@@ -472,19 +450,40 @@ public class WorkerBean extends AbstractAgentBean {
         System.out.println("PATH: " + path.toString());
     }
 
-    private int aStarDistance(Position start, Position target) {
-        AStar astar = new AStar(gridSize.x, gridSize.y, new Node(start.x, start.y), new Node(target.x, target.y), 1, Integer.MAX_VALUE);
+    /**
+     * Wegfindungsfunktion mit A*
+     *
+     */
+    private int aStarUpdate(Position start, Position target) {
 
-        int[][] obsts = new int[obstacles.size()][2];
-        int i = 0;
-        for (Position obs : obstacles) {
-            obsts[i][0] = obs.x;
-            obsts[i][1] = obs.y;
-            i++;
+        Node initialNode = new Node(start.x, start.y);
+        Node finalNode = new Node(target.x, target.y);
+
+        this.astar.setInitialNode(initialNode);
+        this.astar.setFinalNode(finalNode);
+
+        this.path = astar.findPath();
+        if (path.size() > 0) {
+            path.remove(path.get(0));
         }
-        astar.setBlocks(obsts);
 
-        return astar.findPath().size();
+        return this.path.size();
+
+    }
+
+    /**
+     * Wegfindungsfunktion mit A*
+     *
+     */
+    private int aStarDistance(Position start, Position target) {
+
+        Node initialNode = new Node(start.x, start.y);
+        Node finalNode = new Node(target.x, target.y);
+
+        this.astar.setInitialNode(initialNode);
+        this.astar.setFinalNode(finalNode);
+
+        return astar.findPath().size() - 1;
 
     }
 
@@ -506,4 +505,52 @@ public class WorkerBean extends AbstractAgentBean {
         }
         return obstacle;
     }
+
+    /**
+     * sort the orders according to a score and put them into a queue
+     */
+    private void sortOrders(Position orderPosition) {
+        // TODO
+
+    }
+
+    /**
+     * evaluate order score
+     */
+    // TODO create order in execute()
+    private Integer evaluateOrder(Order order) {
+        // TODO check if enough time to process order
+        int distanceForThisOrder = 0;
+        Position goal = this.position;
+
+        if (this.astar == null) {
+            aStar(goal, order.position);
+            distanceForThisOrder = path.size();
+            if (distanceForThisOrder >= order.deadline) {
+                return -1;
+            }
+            return distanceForThisOrder;
+        }
+
+        int zeit = time;
+        int distance = 0;
+        /* TODO wo rein damit gewinn maximiert ?? */
+
+        PriorityQueue<Order> priorityQueueCopy = new PriorityQueue<>(priorityQueue);
+        priorityQueueCopy.add(order);
+        for(Order orderInQueue: priorityQueueCopy) {
+            distance = aStarDistance(goal, orderInQueue.position) + 1;
+            zeit += distance;
+            if (zeit >= orderInQueue.deadline) {
+                return -1;
+            }
+            if (order.id.equals(orderInQueue.id)) {
+                distanceForThisOrder = zeit;
+            }
+            goal = orderInQueue.position;
+        }
+
+        return distanceForThisOrder;
+    }
+
 }
