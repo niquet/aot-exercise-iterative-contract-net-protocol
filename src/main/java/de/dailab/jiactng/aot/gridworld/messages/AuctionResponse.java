@@ -22,6 +22,6 @@ public class AuctionResponse extends GameMessage {
 
     @Override
     public String toString() {
-        return String.format("AuctionResponse(order=%s, deadline=%s)", orderId, deadlineOffer);
+        return String.format("AuctionResponse(order=%s, deadline=%s, status=%s)", orderId, deadlineOffer, status);
     }
 }

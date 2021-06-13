@@ -34,6 +34,8 @@ public class WorkerBean extends AbstractAgentBean {
         public int compare(Order o1, Order o2) {
             int p1 = aStarDistance(position, o1.position);
             int p2 = aStarDistance(position, o2.position);
+            //int p1 = position.distance(o1.position);
+            //int p2 = position.distance(o2.position);
             if (p1 < p2) return -1;
             if (p1 > p2) return 1;
             return 0;
@@ -160,6 +162,8 @@ public class WorkerBean extends AbstractAgentBean {
                         otherWorkers = acoMessage.workerAddressList;
                     }
 
+                    aStar(new Position(0, 0), new Position(0, 0));
+
                     /* TODO Spielfeld initialisieren, obstacles und andere Worker speichern? */
 
                     ACOConfirm acoConfirm = new ACOConfirm();
@@ -196,6 +200,7 @@ public class WorkerBean extends AbstractAgentBean {
 
                     if (handleOrder == null) {
                         handleOrder = priorityQueue.peek();
+
                         aStar(position, handleOrder.position);
                     } else {
                         if (!handleOrder.id.equals(priorityQueue.peek().id) && canOrderBeChanged) {
@@ -209,12 +214,65 @@ public class WorkerBean extends AbstractAgentBean {
 
                 }
 
+                if (payload instanceof StartAuctionMessage) {
+                    StartAuctionMessage auctionMessage = (StartAuctionMessage) message.getPayload();
+                    broker = message.getSender();
+
+                    Order order = new Order();
+                    order.id = auctionMessage.orderId;
+                    order.deadline = auctionMessage.deadline;
+                    order.position = auctionMessage.orderPosition;
+                    priorityQueueForBidding.add(order);
+
+                    if (position != null) {
+                        /* TODO Calculated distance, considering already taken Assignments, hier Intelligenz einbauen */
+                        AuctionResponse auctionResponse = new AuctionResponse();
+                        auctionResponse.orderId = auctionMessage.orderId;
+                        auctionResponse.gameId = gameId;
+                        auctionResponse.sender = thisAgent.getAgentDescription().getMessageBoxAddress();
+                        if (auctionMessage.orderPosition == null || position == null) {
+                            auctionResponse.status = Result.FAIL;
+                        } else {
+                            int isGoodOrder = evaluateOrder(order);
+                            auctionResponse.deadlineOffer = isGoodOrder;
+
+                            if (auctionResponse.deadlineOffer >= auctionMessage.deadline || isGoodOrder == -1) {
+                                auctionResponse.status = Result.FAIL;
+                            } else {
+                                auctionResponse.status = Result.SUCCESS;
+                            }
+                        }
+                        sendMessage(broker, auctionResponse);
+                    } else {
+                        AuctionMessage sendAgain = new AuctionMessage();
+                        sendAgain.orderId = auctionMessage.orderId;
+                        sendAgain.deadline = auctionMessage.deadline;
+                        sendAgain.orderPosition = auctionMessage.orderPosition;
+                        sendMessage(broker, sendAgain);
+                    }
+                }
+
                 if (payload instanceof AuctionMessage) {
+                    boolean orderContained = false;
 
                     AuctionMessage auctionMessage = (AuctionMessage) message.getPayload();
                     broker = message.getSender();
                     if (position != null) {
                         /* TODO Calculated distance, considering already taken Assignments, hier Intelligenz einbauen */
+                        for(Order orderInQueue: priorityQueueForBidding) {
+                            if (auctionMessage.orderId.equals(orderInQueue.id)) {
+                                orderContained = true;
+                                break;
+                            }
+                        }
+                        for(Order orderInQueue: priorityQueue) {
+                            if (auctionMessage.orderId.equals(orderInQueue.id)) {
+                                orderContained = false;
+                                break;
+                            }
+                        }
+                        if(!orderContained) return;
+
                         AuctionResponse auctionResponse = new AuctionResponse();
                         auctionResponse.orderId = auctionMessage.orderId;
                         auctionResponse.gameId = gameId;
@@ -314,6 +372,14 @@ public class WorkerBean extends AbstractAgentBean {
                         hasOrderChanged = true;
                         canOrderBeChanged = true;
                         hasArrivedAtTarget = false;
+
+                        if(handleOrder != null)
+                        for(Order orderInQueue: priorityQueueForBidding) {
+                            if (handleOrder.id.equals(orderInQueue.id)) {
+                                priorityQueueForBidding.remove(orderInQueue);
+                                break;
+                            }
+                        }
                     }
 
                     if (result == Result.FAIL) {
@@ -539,8 +605,16 @@ public class WorkerBean extends AbstractAgentBean {
         Node initialNode = new Node(start.x, start.y);
         Node finalNode = new Node(target.x, target.y);
 
-        return astar.findPath(initialNode, finalNode).size() - 1;
+        int distanceForThisOrder = 0;
 
+        if (this.astar == null) {
+            System.out.println("This.astar is null");
+            aStar(start, target);
+            distanceForThisOrder = path.size();
+            return distanceForThisOrder;
+        }
+
+        return astar.findPath(initialNode, finalNode).size() - 1;
     }
 
     private Position denoteObstacle(WorkerAction action) {
@@ -580,6 +654,7 @@ public class WorkerBean extends AbstractAgentBean {
         Position goal = this.position;
 
         if (this.astar == null) {
+            System.out.println("This.astar is null");
             aStar(goal, order.position);
             distanceForThisOrder = path.size();
             if (distanceForThisOrder > order.deadline || distanceForThisOrder == 0) {
@@ -592,7 +667,6 @@ public class WorkerBean extends AbstractAgentBean {
         int distance = 0;
         /* TODO wo rein damit gewinn maximiert ?? */
 
-        priorityQueueForBidding.add(order);
         for(Order orderInQueue: priorityQueueForBidding) {
             distance = aStarDistance(goal, orderInQueue.position) + 1;
             zeit += distance;
@@ -604,6 +678,8 @@ public class WorkerBean extends AbstractAgentBean {
             }
             goal = orderInQueue.position;
         }
+        if(distanceForThisOrder == 0)
+            return -1;
 
         return distanceForThisOrder;
     }

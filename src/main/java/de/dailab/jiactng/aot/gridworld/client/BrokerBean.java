@@ -75,7 +75,7 @@ public class BrokerBean extends AbstractAgentBean {
 			if (!isGameStarted) {
 				StartGameMessage startGameMessage = new StartGameMessage();
 				startGameMessage.brokerId = thisAgent.getAgentId();
-				startGameMessage.gridFile = "/grids/grids/05_2.grid";
+				startGameMessage.gridFile = "/grids/grids/01_2.grid";
 				sendMessage(server, startGameMessage);
 
 				this.isGameStarted = true;
@@ -208,7 +208,7 @@ public class BrokerBean extends AbstractAgentBean {
 				// start ggf. neue Auktion -> Turnpenalty, deadline, profit berücksichtigen, evtl. auch andere Orders
 
 				// TODO aktuell senden wir immer eine start auction message, mit der unveränderten deadline
-				AuctionMessage startAuction = new AuctionMessage();
+				StartAuctionMessage startAuction = new StartAuctionMessage();
 				startAuction.orderId = orderMessage.order.id;
 				startAuction.deadline =  orderMessage.order.deadline;
 				startAuction.orderPosition =  orderMessage.order.position;
@@ -247,9 +247,17 @@ public class BrokerBean extends AbstractAgentBean {
 						}
 					}
 				} else {
+					/*
 					DefinitivRejectMessage rejectMessage = new DefinitivRejectMessage();
 					rejectMessage.order = this.Orders.get(auctionResponse.orderId);
 					sendMessage(auctionResponse.sender, rejectMessage);
+					*/
+					AuctionMessage startAuction = new AuctionMessage();
+					startAuction.orderId = auctionResponse.orderId;
+					startAuction.deadline = this.Orders.get(auctionResponse.orderId).deadline;
+					startAuction.orderPosition = this.Orders.get(auctionResponse.orderId).position;
+					sendMessage(message.getSender(), startAuction);
+
 				}
 
 				/* server deadline, wenn die Zeit vorbei is wollen wir immer verfallen lassen, oder den Worker mit bestem Angebot zuweisen */
@@ -269,7 +277,7 @@ public class BrokerBean extends AbstractAgentBean {
 				DefinitivBidMessage bid = (DefinitivBidMessage) message.getPayload();
 
 				if(bid.status == Result.SUCCESS){
-					Orders.get(bid.orderId).deadline = bid.deadlineOffer;
+					this.Orders.get(bid.orderId).deadline = bid.deadlineOffer;
 				} else {
 					if(bestOffers.get(bid.orderId).sender.equals(message.getSender())) bestOffers.remove(bid.orderId);
 					AuctionMessage startAuction = new AuctionMessage();
@@ -360,7 +368,7 @@ public class BrokerBean extends AbstractAgentBean {
 		Action sendAction = retrieveAction(ICommunicationBean.ACTION_SEND);
 		JiacMessage message = new JiacMessage(payload);
 		invoke(sendAction, new Serializable[] {message, receiver});
-		System.out.println("BROKER SENDING " + payload);
+		System.out.println("BROKER SENDING WORKER " + receiver.getName() + " " + payload);
 	}
 
 }
