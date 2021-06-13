@@ -28,17 +28,22 @@ public class BrokerBean extends AbstractAgentBean {
 	/* Here are addresses and descriptions */
 	private ICommunicationAddress server = null;
 	private List<IAgentDescription> agentDescriptionList = null;
+
 	/* Here are IDs that are needed for future messages */
 	private Integer gameId = null;
+
 	/* Here are the flags used to check for certain conditions */
 	private Boolean isGameStarted = false;
+
 	/* Here are values that need to be remembered for future decisions */
 	private Integer maximumNumberOfAgents = null;
 	private Integer time = 0;//Estimate for current Game Round on Server side
+
 	/* Here are data structures that hold complex information */
 	private GridworldGame gridworldGame = null;
 	private List<Worker> initialWorkers = new ArrayList<>();
 	private Map<String, WorkerInformation> workerInformationList = new HashMap<>();
+
 	/* OrderId, zugehöriges, bestes Angebot */
 	private List<Order> currentOrders = new ArrayList<>();
 	private Map<String, AuctionResponse> bestOffers = new HashMap<>();
