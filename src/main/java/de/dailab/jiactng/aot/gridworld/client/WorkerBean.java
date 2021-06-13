@@ -575,7 +575,7 @@ public class WorkerBean extends AbstractAgentBean {
         if (this.astar == null) {
             aStar(goal, order.position);
             distanceForThisOrder = path.size();
-            if (distanceForThisOrder > order.deadline) {
+            if (distanceForThisOrder > order.deadline || distanceForThisOrder == 0) {
                 return -1;
             }
             return distanceForThisOrder;

@@ -230,10 +230,13 @@ public class BrokerBean extends AbstractAgentBean {
 				if(auctionResponse.status == Result.SUCCESS) { // sichergehen, dass in der Antwort auch ein Gebot ist
 					if(Orders.get(auctionResponse.orderId).value - auctionResponse.deadlineOffer * Orders.get(auctionResponse.orderId).turnPenalty > 0) { // Broker maximiert Reward, daher immer testen ob der erwartete Reward aus dem Offer >0 ist
 						if (bestOffers.get(auctionResponse.orderId) == null || auctionResponse.deadlineOffer < bestOffers.get(auctionResponse.orderId).deadlineOffer) {
+							if (bestOffers.get(auctionResponse.orderId) != null) bestOffers.remove(auctionResponse.orderId);
 							bestOffers.put(auctionResponse.orderId, auctionResponse);
 							DefinitivBidMessage bidMessage = new DefinitivBidMessage();
 							bidMessage.orderId = auctionResponse.orderId;
 							bidMessage.deadlineOffer = auctionResponse.deadlineOffer;
+							bidMessage.orderPosition = Orders.get(auctionResponse.orderId).position;
+							/* If accepted bid put order in queue (new queue??)*/
 							sendMessage(auctionResponse.sender, bidMessage);
 						} else {
 							AuctionMessage startAuction = new AuctionMessage();
