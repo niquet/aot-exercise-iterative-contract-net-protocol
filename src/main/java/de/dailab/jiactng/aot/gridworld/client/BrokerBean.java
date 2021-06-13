@@ -294,6 +294,7 @@ public class BrokerBean extends AbstractAgentBean {
 
 		}
 	time ++;
+
 	}
 
 	/** Nach Zeit Ablauf dem besten Worker den Order schicken */

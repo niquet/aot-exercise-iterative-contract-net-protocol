@@ -1,0 +1,60 @@
+210612-220950
+GAME No. 876378109
+TURN 31/30
+Brokers
+B(a-6acd85eadac90, workers=[W(w1, Pos(0, 3), 0), W(w2, Pos(7, 2), 0)], taken=[o1], completed=[], failed=[])
+Orders
+O(o1, Pos(0, 0), cr=1, dl=30, cp=-1, val=30, tp=1)
+O(o3, Pos(9, 9), cr=3, dl=30, cp=-1, val=30, tp=2)
+O(o2, Pos(1, 3), cr=4, dl=22, cp=-1, val=40, tp=5)
+O(o5, Pos(0, 6), cr=5, dl=15, cp=-1, val=30, tp=0)
+O(o4, Pos(7, 7), cr=6, dl=15, cp=-1, val=10, tp=1)
+	.	.	.	#	.	.	#	.	.	.
+	.	.	.	#	.	.	.	.	#	.
+	.	.	.	#	.	.	#	w2	.	.
+	w1	.	.	#	.	.	.	.	#	.
+	.	.	.	#	.	#	.	.	.	.
+	.	.	.	#	.	.	.	#	.	.
+	.	#	#	#	.	.	.	.	.	.
+	.	.	.	.	.	.	#	.	#	.
+	#	#	.	#	.	.	#	.	.	#
+	.	.	.	#	.	.	.	.	.	.
+
+210612-220919: Sending StartGameResponse(game=876378109, size=Pos(10, 10), workers=[W(w1, Pos(5, 5), 0), W(w2, Pos(7, 2), 0)], obstacles: 23)
+210612-220920: Sending OrderMessage(game=876378109, order=O(o1, Pos(0, 0), cr=1, dl=30, cp=-1, val=30, tp=1))
+210612-220922: Sending OrderMessage(game=876378109, order=O(o3, Pos(9, 9), cr=3, dl=30, cp=-1, val=30, tp=2))
+210612-220923: Sending OrderMessage(game=876378109, order=O(o2, Pos(1, 3), cr=4, dl=22, cp=-1, val=40, tp=5))
+210612-220923: Received TakeOrderMessage(game=876378109, order=o1, broker=a-6acd85eadac90)
+210612-220923: Sending TakeOrderConfirm(game=876378109, order=o1, broker=a-6acd85eadac90, SUCCESS)
+210612-220924: Received WorkerMessage(game=876378109, worker=w1, action=WEST)
+210612-220924: Sending WorkerConfirm(game=876378109, worker=w1, action=WEST, SUCCESS)
+210612-220924: Sending OrderMessage(game=876378109, order=O(o5, Pos(0, 6), cr=5, dl=15, cp=-1, val=30, tp=0))
+210612-220925: Received WorkerMessage(game=876378109, worker=w1, action=SOUTH)
+210612-220925: Sending WorkerConfirm(game=876378109, worker=w1, action=SOUTH, SUCCESS)
+210612-220925: Sending OrderMessage(game=876378109, order=O(o4, Pos(7, 7), cr=6, dl=15, cp=-1, val=10, tp=1))
+210612-220926: Received WorkerMessage(game=876378109, worker=w1, action=SOUTH)
+210612-220926: Sending WorkerConfirm(game=876378109, worker=w1, action=SOUTH, SUCCESS)
+210612-220927: Received WorkerMessage(game=876378109, worker=w1, action=WEST)
+210612-220927: Sending WorkerConfirm(game=876378109, worker=w1, action=WEST, SUCCESS)
+210612-220928: Received WorkerMessage(game=876378109, worker=w1, action=WEST)
+210612-220928: Sending WorkerConfirm(game=876378109, worker=w1, action=WEST, SUCCESS)
+210612-220929: Received WorkerMessage(game=876378109, worker=w1, action=WEST)
+210612-220929: Sending WorkerConfirm(game=876378109, worker=w1, action=WEST, SUCCESS)
+210612-220930: Received WorkerMessage(game=876378109, worker=w1, action=WEST)
+210612-220930: Sending WorkerConfirm(game=876378109, worker=w1, action=WEST, SUCCESS)
+210612-220931: Received WorkerMessage(game=876378109, worker=w1, action=NORTH)
+210612-220931: Sending WorkerConfirm(game=876378109, worker=w1, action=NORTH, FAIL)
+210612-220932: Received WorkerMessage(game=876378109, worker=w1, action=NORTH)
+210612-220932: Sending WorkerConfirm(game=876378109, worker=w1, action=NORTH, SUCCESS)
+210612-220933: Received WorkerMessage(game=876378109, worker=w1, action=NORTH)
+210612-220933: Sending WorkerConfirm(game=876378109, worker=w1, action=NORTH, FAIL)
+210612-220934: Received WorkerMessage(game=876378109, worker=w1, action=NORTH)
+210612-220934: Sending WorkerConfirm(game=876378109, worker=w1, action=NORTH, SUCCESS)
+210612-220935: Received WorkerMessage(game=876378109, worker=w1, action=NORTH)
+210612-220935: Sending WorkerConfirm(game=876378109, worker=w1, action=NORTH, SUCCESS)
+210612-220936: Received WorkerMessage(game=876378109, worker=w1, action=NORTH)
+210612-220936: Sending WorkerConfirm(game=876378109, worker=w1, action=NORTH, SUCCESS)
+210612-220950: Sending WorkerScoreMessage(game=876378109, worker=w1, winner?=true, orders completed=0)
+210612-220950: Sending WorkerScoreMessage(game=876378109, worker=w2, winner?=false, orders completed=0)
+210612-220950: Sending EndGameMessage(game=876378109, broker=a-6acd85eadac90, winner?=true, reward=-11,00)
+
