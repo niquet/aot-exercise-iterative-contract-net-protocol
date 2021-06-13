@@ -1,0 +1,41 @@
+210613-114719
+GAME No. 1964253626
+TURN 21/20
+Brokers
+B(a-2608f2624f6f, workers=[W(w1, Pos(5, 4), 1), W(w2, Pos(5, 6), 0), W(w3, Pos(4, 0), 0)], taken=[], completed=[o4], failed=[])
+Orders
+O(o1, Pos(2, 5), cr=0, dl=7, cp=-1, val=15, tp=1)
+O(o2, Pos(9, 6), cr=1, dl=15, cp=-1, val=15, tp=1)
+O(o3, Pos(4, 4), cr=2, dl=20, cp=-1, val=10, tp=0)
+O(o4, Pos(5, 4), cr=2, dl=20, cp=5, val=10, tp=0)
+	.	.	.	.	w3	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	#	.
+	.	.	.	#	.	w1	.	.	.	#	.
+	.	.	.	#	#	#	#	#	#	#	.
+	.	.	.	.	.	w2	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.
+
+210613-114657: Sending StartGameResponse(game=1964253626, size=Pos(11, 11), workers=[W(w1, Pos(5, 2), 0), W(w2, Pos(5, 6), 0), W(w3, Pos(4, 0), 0)], obstacles: 10)
+210613-114658: Sending OrderMessage(game=1964253626, order=O(o1, Pos(2, 5), cr=0, dl=7, cp=-1, val=15, tp=1))
+210613-114659: Sending OrderMessage(game=1964253626, order=O(o2, Pos(9, 6), cr=1, dl=15, cp=-1, val=15, tp=1))
+210613-114700: Sending OrderMessage(game=1964253626, order=O(o3, Pos(4, 4), cr=2, dl=20, cp=-1, val=10, tp=0))
+210613-114700: Sending OrderMessage(game=1964253626, order=O(o4, Pos(5, 4), cr=2, dl=20, cp=-1, val=10, tp=0))
+210613-114701: Received TakeOrderMessage(game=1964253626, order=o4, broker=a-2608f2624f6f)
+210613-114701: Sending TakeOrderConfirm(game=1964253626, order=o4, broker=a-2608f2624f6f, SUCCESS)
+210613-114701: Received WorkerMessage(game=1964253626, worker=w1, action=SOUTH)
+210613-114701: Sending WorkerConfirm(game=1964253626, worker=w1, action=SOUTH, SUCCESS)
+210613-114702: Received WorkerMessage(game=1964253626, worker=w1, action=SOUTH)
+210613-114702: Sending WorkerConfirm(game=1964253626, worker=w1, action=SOUTH, SUCCESS)
+210613-114703: Received WorkerMessage(game=1964253626, worker=w1, action=ORDER)
+210613-114703: Sending WorkerConfirm(game=1964253626, worker=w1, action=ORDER, SUCCESS)
+210613-114703: Sending OrderCompleted(game=1964253626, order=o4, SUCCESS, reward=10)
+210613-114719: Sending WorkerScoreMessage(game=1964253626, worker=w1, winner?=true, orders completed=1)
+210613-114719: Sending WorkerScoreMessage(game=1964253626, worker=w2, winner?=false, orders completed=0)
+210613-114719: Sending WorkerScoreMessage(game=1964253626, worker=w3, winner?=false, orders completed=0)
+210613-114719: Sending EndGameMessage(game=1964253626, broker=a-2608f2624f6f, winner?=true, reward=8,00)
+

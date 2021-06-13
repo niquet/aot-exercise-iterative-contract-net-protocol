@@ -40,6 +40,7 @@ public class WorkerBean extends AbstractAgentBean {
         }
     };
     private final PriorityQueue<Order> priorityQueue = new PriorityQueue<>(compareOrder);
+    private final PriorityQueue<Order> incomeOrders = new PriorityQueue<>(compareOrder);
     private Order handleOrder = null;
     private Boolean hasArrivedAtTarget = false;
     private Integer gameId = null;
@@ -55,6 +56,7 @@ public class WorkerBean extends AbstractAgentBean {
 
     private String workerIdForServer = null;
     private ICommunicationAddress broker = null;
+    private ICommunicationAddress server = null;
     private int time;
 
     private ArrayList<ICommunicationAddress> otherWorkers = null;
@@ -138,6 +140,7 @@ public class WorkerBean extends AbstractAgentBean {
                     position = acoMessage.position;
                     gameId = acoMessage.gameId;
                     broker = message.getSender();
+                    server = acoMessage.server;
                     gridSize = acoMessage.size;
                     obstacles = acoMessage.obstacles;
                     if (otherWorkers == null) {
@@ -174,9 +177,10 @@ public class WorkerBean extends AbstractAgentBean {
                     assignOrderConfirm.state = Result.FAIL;
 
                     orderToAddress.put(order, server);
-                    priorityQueue.add(order);
+                    if(!priorityQueue.contains(order)) priorityQueue.add(order);
                     assignOrderConfirm.state = Result.SUCCESS;
 
+                    /* Unwichtig - handleorder wird nicht mehr genutzt */
                     if (priorityQueue.contains(order) && handleOrder == null)
                         handleOrder = order;
                     sendMessage(broker, assignOrderConfirm);
@@ -198,7 +202,15 @@ public class WorkerBean extends AbstractAgentBean {
                             auctionResponse.deadlineOffer = possibleEnd(auctionMessage.orderPosition) + time;
                             if (auctionResponse.deadlineOffer >= auctionMessage.deadline)
                                 auctionResponse.status = Result.FAIL;
-                            else auctionResponse.status = Result.SUCCESS;
+                            else {
+                                Order neu = new Order();
+                                neu.deadline = auctionMessage.deadline;
+                                neu.position = auctionMessage.orderPosition;
+                                neu.id = auctionMessage.orderId;
+                                incomeOrders.add(neu);
+                                orderToAddress.put(neu, server);
+                                auctionResponse.status = Result.SUCCESS;
+                            }
                         }
                         sendMessage(broker, auctionResponse);
                     } else {
@@ -229,7 +241,18 @@ public class WorkerBean extends AbstractAgentBean {
 
                 if (payload instanceof DefinitivRejectMessage) {
                     DefinitivRejectMessage reject = (DefinitivRejectMessage) message.getPayload();
-                    if (priorityQueue.contains(reject.order)) priorityQueue.remove(reject.order);
+                    for (Order order : priorityQueue) {
+                        if (order.id.equals(reject.order.id)) {
+                            priorityQueue.remove(order);
+                            break;
+                        }
+                    }
+                    for (Order order : incomeOrders) {
+                        if (order.id.equals(reject.order.id)) {
+                            incomeOrders.remove(order);
+                            break;
+                        }
+                    }
                 }
 
                 if (payload instanceof WorkerConfirm) {
@@ -245,7 +268,7 @@ public class WorkerBean extends AbstractAgentBean {
                     }
 
                     if (result == Result.FAIL) {
-                        // TODO unbekannte obstacles
+                        // unbekannte obstacles
                         if (workerConfirm.action != WorkerAction.ORDER) {
                             lastMoveFailed = true;
                             for (ICommunicationAddress workerAddress : otherWorkers) {
@@ -267,7 +290,6 @@ public class WorkerBean extends AbstractAgentBean {
                     }
                 }
 
-                // fertig.
                 if (payload instanceof ObstacleUpdate) {
                     if (((ObstacleUpdate) payload).workerAgentId.equals(thisAgent.getAgentId())) {
                         return;
@@ -290,10 +312,10 @@ public class WorkerBean extends AbstractAgentBean {
         /* TODO wo rein damit gewinn maximiert ?? */
 
         for (Order order : this.priorityQueue) {
-            zeit += order.position.distance(goal) + 1;
+            zeit += aStarDistance(order.position,goal) + 1;
             goal = order.position;
         }
-        zeit += target.distance(goal);
+        zeit += aStarDistance(target, goal);
         return zeit;
     }
 

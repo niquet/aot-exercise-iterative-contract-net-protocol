@@ -138,6 +138,7 @@ public class BrokerBean extends AbstractAgentBean {
 					acoMessage.size = this.gridworldGame.size;
 					acoMessage.gameId = this.gameId;
 					acoMessage.workerAddressList = workerAddressList;
+					acoMessage.server = server;
 
 					ICommunicationAddress workerAddress = workerInformation.agentDescription.getMessageBoxAddress();
 					sendMessage(workerAddress, acoMessage);
@@ -146,7 +147,6 @@ public class BrokerBean extends AbstractAgentBean {
 
 				done = true;
 
-				/* Geht schöner - nur für funktionalität noch drinnen - abfangen dass worker Informationen noch nicht da */
 				for(Order order : currentOrders){
 					for (Worker worker: initialWorkers) {
 						AuctionMessage startAuction = new AuctionMessage();

@@ -1,0 +1,69 @@
+210613-101256
+GAME No. 130919478
+TURN 21/20
+Brokers
+B(a-21d58a43196d, workers=[W(w1, Pos(5, 2), 0), W(w2, Pos(5, 2), 1), W(w3, Pos(4, 0), 0)], taken=[o3, o4], completed=[o2], failed=[])
+Orders
+O(o1, Pos(2, 5), cr=0, dl=7, cp=-1, val=15, tp=1)
+O(o2, Pos(9, 6), cr=1, dl=15, cp=8, val=15, tp=1)
+O(o3, Pos(4, 4), cr=2, dl=20, cp=-1, val=10, tp=0)
+O(o4, Pos(5, 4), cr=2, dl=20, cp=-1, val=10, tp=0)
+	.	.	.	.	w3	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	w2	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	#	.
+	.	.	.	#	.	.	.	.	.	#	.
+	.	.	.	#	#	#	#	#	#	#	.
+	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.
+
+210613-101234: Sending StartGameResponse(game=130919478, size=Pos(11, 11), workers=[W(w1, Pos(5, 2), 0), W(w2, Pos(5, 6), 0), W(w3, Pos(4, 0), 0)], obstacles: 10)
+210613-101235: Sending OrderMessage(game=130919478, order=O(o1, Pos(2, 5), cr=0, dl=7, cp=-1, val=15, tp=1))
+210613-101235: Sending OrderMessage(game=130919478, order=O(o2, Pos(9, 6), cr=1, dl=15, cp=-1, val=15, tp=1))
+210613-101236: Sending OrderMessage(game=130919478, order=O(o3, Pos(4, 4), cr=2, dl=20, cp=-1, val=10, tp=0))
+210613-101236: Sending OrderMessage(game=130919478, order=O(o4, Pos(5, 4), cr=2, dl=20, cp=-1, val=10, tp=0))
+210613-101238: Received TakeOrderMessage(game=130919478, order=o2, broker=a-21d58a43196d)
+210613-101238: Sending TakeOrderConfirm(game=130919478, order=o2, broker=a-21d58a43196d, SUCCESS)
+210613-101239: Received TakeOrderMessage(game=130919478, order=o3, broker=a-21d58a43196d)
+210613-101239: Sending TakeOrderConfirm(game=130919478, order=o3, broker=a-21d58a43196d, SUCCESS)
+210613-101239: Received TakeOrderMessage(game=130919478, order=o4, broker=a-21d58a43196d)
+210613-101239: Sending TakeOrderConfirm(game=130919478, order=o4, broker=a-21d58a43196d, SUCCESS)
+210613-101239: Received WorkerMessage(game=130919478, worker=w2, action=EAST)
+210613-101239: Sending WorkerConfirm(game=130919478, worker=w2, action=EAST, SUCCESS)
+210613-101240: Received WorkerMessage(game=130919478, worker=w2, action=EAST)
+210613-101240: Sending WorkerConfirm(game=130919478, worker=w2, action=EAST, SUCCESS)
+210613-101241: Received WorkerMessage(game=130919478, worker=w2, action=EAST)
+210613-101241: Sending WorkerConfirm(game=130919478, worker=w2, action=EAST, SUCCESS)
+210613-101242: Received WorkerMessage(game=130919478, worker=w2, action=EAST)
+210613-101242: Sending WorkerConfirm(game=130919478, worker=w2, action=EAST, SUCCESS)
+210613-101243: Received WorkerMessage(game=130919478, worker=w2, action=ORDER)
+210613-101243: Sending WorkerConfirm(game=130919478, worker=w2, action=ORDER, SUCCESS)
+210613-101243: Sending OrderCompleted(game=130919478, order=o2, SUCCESS, reward=8)
+210613-101244: Received WorkerMessage(game=130919478, worker=w2, action=EAST)
+210613-101244: Sending WorkerConfirm(game=130919478, worker=w2, action=EAST, SUCCESS)
+210613-101245: Received WorkerMessage(game=130919478, worker=w2, action=NORTH)
+210613-101245: Sending WorkerConfirm(game=130919478, worker=w2, action=NORTH, SUCCESS)
+210613-101246: Received WorkerMessage(game=130919478, worker=w2, action=NORTH)
+210613-101246: Sending WorkerConfirm(game=130919478, worker=w2, action=NORTH, SUCCESS)
+210613-101247: Received WorkerMessage(game=130919478, worker=w2, action=NORTH)
+210613-101247: Sending WorkerConfirm(game=130919478, worker=w2, action=NORTH, SUCCESS)
+210613-101248: Received WorkerMessage(game=130919478, worker=w2, action=NORTH)
+210613-101248: Sending WorkerConfirm(game=130919478, worker=w2, action=NORTH, SUCCESS)
+210613-101249: Received WorkerMessage(game=130919478, worker=w2, action=WEST)
+210613-101249: Sending WorkerConfirm(game=130919478, worker=w2, action=WEST, SUCCESS)
+210613-101250: Received WorkerMessage(game=130919478, worker=w2, action=WEST)
+210613-101250: Sending WorkerConfirm(game=130919478, worker=w2, action=WEST, SUCCESS)
+210613-101251: Received WorkerMessage(game=130919478, worker=w2, action=WEST)
+210613-101251: Sending WorkerConfirm(game=130919478, worker=w2, action=WEST, SUCCESS)
+210613-101252: Received WorkerMessage(game=130919478, worker=w2, action=WEST)
+210613-101252: Sending WorkerConfirm(game=130919478, worker=w2, action=WEST, SUCCESS)
+210613-101253: Received WorkerMessage(game=130919478, worker=w2, action=WEST)
+210613-101253: Sending WorkerConfirm(game=130919478, worker=w2, action=WEST, SUCCESS)
+210613-101256: Sending WorkerScoreMessage(game=130919478, worker=w1, winner?=false, orders completed=0)
+210613-101256: Sending WorkerScoreMessage(game=130919478, worker=w2, winner?=true, orders completed=1)
+210613-101256: Sending WorkerScoreMessage(game=130919478, worker=w3, winner?=false, orders completed=0)
+210613-101256: Sending EndGameMessage(game=130919478, broker=a-21d58a43196d, winner?=true, reward=-6,00)
+

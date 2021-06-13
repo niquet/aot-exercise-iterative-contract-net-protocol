@@ -30,6 +30,9 @@ public class ACOMessage extends GameMessage {
     /** the initial position of the worker */
     public Position position;
 
+    /** server for communication */
+    public ICommunicationAddress server;
+
     /** initial list of workers available to the bidder */
     public List<Worker> initialWorkers;
 

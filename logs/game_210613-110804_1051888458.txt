@@ -1,0 +1,60 @@
+210613-110804
+GAME No. 1051888458
+TURN 21/20
+Brokers
+B(a-24d7e6932ab7, workers=[W(w1, Pos(4, 2), 0), W(w2, Pos(6, 6), 0), W(w3, Pos(5, 4), 2)], taken=[], completed=[o3, o4], failed=[])
+Orders
+O(o1, Pos(2, 5), cr=0, dl=7, cp=-1, val=15, tp=1)
+O(o2, Pos(9, 6), cr=1, dl=15, cp=-1, val=15, tp=1)
+O(o3, Pos(4, 4), cr=2, dl=20, cp=7, val=10, tp=0)
+O(o4, Pos(5, 4), cr=2, dl=20, cp=10, val=10, tp=0)
+	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	w1	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	#	.
+	.	.	.	#	.	w3	.	.	.	#	.
+	.	.	.	#	#	#	#	#	#	#	.
+	.	.	.	.	.	.	w2	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.
+
+210613-110742: Sending StartGameResponse(game=1051888458, size=Pos(11, 11), workers=[W(w1, Pos(5, 2), 0), W(w2, Pos(5, 6), 0), W(w3, Pos(4, 0), 0)], obstacles: 10)
+210613-110743: Sending OrderMessage(game=1051888458, order=O(o1, Pos(2, 5), cr=0, dl=7, cp=-1, val=15, tp=1))
+210613-110744: Sending OrderMessage(game=1051888458, order=O(o2, Pos(9, 6), cr=1, dl=15, cp=-1, val=15, tp=1))
+210613-110745: Sending OrderMessage(game=1051888458, order=O(o3, Pos(4, 4), cr=2, dl=20, cp=-1, val=10, tp=0))
+210613-110745: Sending OrderMessage(game=1051888458, order=O(o4, Pos(5, 4), cr=2, dl=20, cp=-1, val=10, tp=0))
+210613-110745: Received WorkerMessage(game=1051888458, worker=w2, action=EAST)
+210613-110745: Sending WorkerConfirm(game=1051888458, worker=w2, action=EAST, SUCCESS)
+210613-110746: Received WorkerMessage(game=1051888458, worker=w3, action=SOUTH)
+210613-110746: Sending WorkerConfirm(game=1051888458, worker=w3, action=SOUTH, SUCCESS)
+210613-110746: Received WorkerMessage(game=1051888458, worker=w1, action=WEST)
+210613-110746: Sending WorkerConfirm(game=1051888458, worker=w1, action=WEST, SUCCESS)
+210613-110746: Received TakeOrderMessage(game=1051888458, order=o3, broker=a-24d7e6932ab7)
+210613-110746: Sending TakeOrderConfirm(game=1051888458, order=o3, broker=a-24d7e6932ab7, SUCCESS)
+210613-110746: Received TakeOrderMessage(game=1051888458, order=o4, broker=a-24d7e6932ab7)
+210613-110746: Sending TakeOrderConfirm(game=1051888458, order=o4, broker=a-24d7e6932ab7, SUCCESS)
+210613-110747: Received WorkerMessage(game=1051888458, worker=w3, action=SOUTH)
+210613-110747: Sending WorkerConfirm(game=1051888458, worker=w3, action=SOUTH, SUCCESS)
+210613-110748: Received WorkerMessage(game=1051888458, worker=w3, action=SOUTH)
+210613-110748: Sending WorkerConfirm(game=1051888458, worker=w3, action=SOUTH, SUCCESS)
+210613-110749: Received WorkerMessage(game=1051888458, worker=w3, action=SOUTH)
+210613-110749: Sending WorkerConfirm(game=1051888458, worker=w3, action=SOUTH, SUCCESS)
+210613-110750: Received WorkerMessage(game=1051888458, worker=w3, action=ORDER)
+210613-110750: Sending WorkerConfirm(game=1051888458, worker=w3, action=ORDER, SUCCESS)
+210613-110750: Sending OrderCompleted(game=1051888458, order=o3, SUCCESS, reward=10)
+210613-110751: Received WorkerMessage(game=1051888458, worker=w3, action=ORDER)
+210613-110751: Sending WorkerConfirm(game=1051888458, worker=w3, action=ORDER, FAIL)
+210613-110752: Received WorkerMessage(game=1051888458, worker=w3, action=EAST)
+210613-110752: Sending WorkerConfirm(game=1051888458, worker=w3, action=EAST, SUCCESS)
+210613-110753: Received WorkerMessage(game=1051888458, worker=w3, action=ORDER)
+210613-110753: Sending WorkerConfirm(game=1051888458, worker=w3, action=ORDER, SUCCESS)
+210613-110753: Sending OrderCompleted(game=1051888458, order=o4, SUCCESS, reward=10)
+210613-110754: Received WorkerMessage(game=1051888458, worker=w3, action=ORDER)
+210613-110754: Sending WorkerConfirm(game=1051888458, worker=w3, action=ORDER, FAIL)
+210613-110804: Sending WorkerScoreMessage(game=1051888458, worker=w1, winner?=false, orders completed=0)
+210613-110804: Sending WorkerScoreMessage(game=1051888458, worker=w2, winner?=false, orders completed=0)
+210613-110804: Sending WorkerScoreMessage(game=1051888458, worker=w3, winner?=true, orders completed=2)
+210613-110804: Sending EndGameMessage(game=1051888458, broker=a-24d7e6932ab7, winner?=true, reward=13,00)
+
