@@ -86,7 +86,7 @@ public class WorkerBean extends AbstractAgentBean {
 			if (position == null) return;
             /* Kann durch den ACO Worker alles geändert werden, aber für funktionalität lass ich es erstmal so */
 
-            if (position.equals(priorityQueue.peek().position)) {
+            if (position.equals(firstOrder.position)) {
                 WorkerMessage move = new WorkerMessage();
                 move.action = WorkerAction.ORDER;
                 move.gameId = gameId;
@@ -94,18 +94,19 @@ public class WorkerBean extends AbstractAgentBean {
                 hasArrivedAtTarget = true;
 
                 sendMessage(orderToAddress.get(priorityQueue.peek()), move);
-            }
-            WorkerMessage move = new WorkerMessage();
-            aStar(position, firstOrder.position);
-            Position nextMove = getNextMove();
-            if (nextMove != null){
-				move.action = getMoveAction(position, nextMove);
-				lastMove = move.action;
-				move.gameId = gameId;
-				move.workerId = workerIdForServer;
+            } else {
+                WorkerMessage move = new WorkerMessage();
+                aStar(position, firstOrder.position);
+                Position nextMove = getNextMove();
+                if (nextMove != null) {
+                    move.action = getMoveAction(position, nextMove);
+                    lastMove = move.action;
+                    move.gameId = gameId;
+                    move.workerId = workerIdForServer;
 
-				sendMessage(orderToAddress.get(firstOrder), move);
-			}
+                    sendMessage(orderToAddress.get(firstOrder), move);
+                }
+            }
 
         }
 
