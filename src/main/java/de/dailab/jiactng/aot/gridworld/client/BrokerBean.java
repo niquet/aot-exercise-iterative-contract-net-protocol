@@ -75,7 +75,7 @@ public class BrokerBean extends AbstractAgentBean {
 			if (!isGameStarted) {
 				StartGameMessage startGameMessage = new StartGameMessage();
 				startGameMessage.brokerId = thisAgent.getAgentId();
-				startGameMessage.gridFile = "/grids/04_1.grid";
+				startGameMessage.gridFile = "/grids/grids/05_2.grid";
 				sendMessage(server, startGameMessage);
 
 				this.isGameStarted = true;
