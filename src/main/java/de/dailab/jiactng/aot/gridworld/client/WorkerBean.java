@@ -36,12 +36,12 @@ public class WorkerBean extends AbstractAgentBean {
             int p2 = aStarDistance(position, o2.position);
             //int p1 = position.distance(o1.position);
             //int p2 = position.distance(o2.position);
-            if (p1 < p2) return -1;
-            if (p1 > p2) return 1;
+            if (p1 < p2) return 1;
+            if (p1 > p2) return -1;
             return 0;
         }
     };
-    private final PriorityQueue<Order> priorityQueue = new PriorityQueue<>(compareOrder);
+    private PriorityQueue<Order> priorityQueue = new PriorityQueue<>(compareOrder);
     private PriorityQueue<Order> priorityQueueForBidding = new PriorityQueue<>(priorityQueue);
 
     private Order handleOrder = null;
@@ -86,6 +86,7 @@ public class WorkerBean extends AbstractAgentBean {
                 System.out.println("WORKER " + workerIdForServer + " REMOVED ORDER: " + handleOrder.id);
 
                 priorityQueue.remove(handleOrder);
+                //priorityQueue = new PriorityQueue<>(priorityQueue);
 
                 if (!priorityQueue.isEmpty()) {
 
@@ -196,6 +197,7 @@ public class WorkerBean extends AbstractAgentBean {
 
                     orderToAddress.put(order, server);
                     priorityQueue.add(order);
+                    //priorityQueue = new PriorityQueue<>(priorityQueue);
                     assignOrderConfirm.state = Result.SUCCESS;
 
                     if (handleOrder == null) {
@@ -223,6 +225,7 @@ public class WorkerBean extends AbstractAgentBean {
                     order.deadline = auctionMessage.deadline;
                     order.position = auctionMessage.orderPosition;
                     priorityQueueForBidding.add(order);
+                    //priorityQueueForBidding = new PriorityQueue<>(priorityQueueForBidding);
 
                     if (position != null) {
                         /* TODO Calculated distance, considering already taken Assignments, hier Intelligenz einbauen */
@@ -242,6 +245,8 @@ public class WorkerBean extends AbstractAgentBean {
                                 auctionResponse.status = Result.SUCCESS;
                             }
                         }
+                        //System.out.println("PrioQueue von " + workerIdForServer + " = " + priorityQueue.toString());
+                        //System.out.println("PrioQueueForBidding von " + workerIdForServer + " = " + priorityQueueForBidding.toString());
                         sendMessage(broker, auctionResponse);
                     } else {
                         AuctionMessage sendAgain = new AuctionMessage();
@@ -290,10 +295,19 @@ public class WorkerBean extends AbstractAgentBean {
 
                             if (auctionResponse.deadlineOffer >= auctionMessage.deadline || isGoodOrder == -1) {
                                 auctionResponse.status = Result.FAIL;
+                                for(Order orderInQueue: priorityQueueForBidding) {
+                                    if (auctionMessage.orderId.equals(orderInQueue.id)) {
+                                        priorityQueueForBidding.remove(orderInQueue);
+                                        //priorityQueueForBidding = new PriorityQueue<>(priorityQueueForBidding);
+                                        break;
+                                    }
+                                }
                             } else {
                                 auctionResponse.status = Result.SUCCESS;
                             }
                         }
+                        //System.out.println("PrioQueue von " + workerIdForServer + " = " + priorityQueue.toString());
+                        //System.out.println("PrioQueueForBidding von " + workerIdForServer + " = " + priorityQueueForBidding.toString());
                         sendMessage(broker, auctionResponse);
                     } else {
                         AuctionMessage sendAgain = new AuctionMessage();
@@ -351,6 +365,7 @@ public class WorkerBean extends AbstractAgentBean {
                     for(Order orderInQueue: priorityQueueForBidding) {
                         if (reject.order.id.equals(orderInQueue.id)) {
                             priorityQueueForBidding.remove(orderInQueue);
+                            //priorityQueueForBidding = new PriorityQueue<>(priorityQueueForBidding);
                             break;
                         }
                     }
@@ -367,6 +382,7 @@ public class WorkerBean extends AbstractAgentBean {
 
                     if ((workerConfirm.action == WorkerAction.ORDER) && hasArrivedAtTarget) {
                         priorityQueue.remove(handleOrder);
+                        //priorityQueue = new PriorityQueue<>(priorityQueue);
                         System.out.println("SUCCESS " + handleOrder);
                         handleOrder = priorityQueue.peek();
                         hasOrderChanged = true;
@@ -377,6 +393,7 @@ public class WorkerBean extends AbstractAgentBean {
                         for(Order orderInQueue: priorityQueueForBidding) {
                             if (handleOrder.id.equals(orderInQueue.id)) {
                                 priorityQueueForBidding.remove(orderInQueue);
+                                //priorityQueueForBidding = new PriorityQueue<>(priorityQueueForBidding);
                                 break;
                             }
                         }
@@ -613,8 +630,13 @@ public class WorkerBean extends AbstractAgentBean {
             distanceForThisOrder = path.size();
             return distanceForThisOrder;
         }
+        //int distance = astar.findPath(initialNode, finalNode).size() - 1;
+        aStar(start, target);
+        int distance = astar.findPath(initialNode, finalNode).size() - 1;
 
-        return astar.findPath(initialNode, finalNode).size() - 1;
+        System.out.println(String.format("DISTANCE BETWEEN : (%d, %d) and (%d, %d) is " + distance, start.x, start.y, target.x, target.y));
+
+        return distance;
     }
 
     private Position denoteObstacle(WorkerAction action) {
@@ -648,6 +670,45 @@ public class WorkerBean extends AbstractAgentBean {
      * evaluate order score
      */
     // TODO create order in execute()
+    /*
+    private Integer evaluateOrder(Order order) {
+        // TODO check if enough time to process order
+        int distanceForThisOrder = 0;
+        Position goal = this.position;
+
+        if (this.astar == null) {
+            System.out.println("This.astar is null");
+            aStar(goal, order.position);
+            distanceForThisOrder = path.size();
+            if (distanceForThisOrder > order.deadline || distanceForThisOrder == 0) {
+                return -1;
+            }
+            return distanceForThisOrder;
+        }
+
+        int zeit = time;
+        //int zeit = 0;
+        int distance = 0;
+
+        for(Order orderInQueue: priorityQueueForBidding) {
+            distance = aStarDistance(goal, orderInQueue.position) + 1;
+            zeit += distance;
+            if (zeit > orderInQueue.deadline) {
+                return -1;
+            }
+            System.out.println("ORDER ID = " + order.id + " vs " + orderInQueue.id);
+            if (order.id.equals(orderInQueue.id)) {
+                distanceForThisOrder = zeit;
+            }
+            goal = orderInQueue.position;
+        }
+        if(distanceForThisOrder == 0)
+            return -1;
+
+        return distanceForThisOrder;
+    }
+    */
+
     private Integer evaluateOrder(Order order) {
         // TODO check if enough time to process order
         int distanceForThisOrder = 0;
@@ -667,10 +728,15 @@ public class WorkerBean extends AbstractAgentBean {
         int distance = 0;
         /* TODO wo rein damit gewinn maximiert ?? */
 
-        for(Order orderInQueue: priorityQueueForBidding) {
+        PriorityQueue copy = new PriorityQueue(priorityQueueForBidding);
+        System.out.println("PQ FOR WORKER " + workerIdForServer + " = [");
+        while(!copy.isEmpty()) {
+            Order orderInQueue = (Order) copy.poll();
+            System.out.println(orderInQueue.id + ",");
             distance = aStarDistance(goal, orderInQueue.position) + 1;
             zeit += distance;
             if (zeit > orderInQueue.deadline) {
+
                 return -1;
             }
             if (order.id.equals(orderInQueue.id)) {
@@ -678,6 +744,8 @@ public class WorkerBean extends AbstractAgentBean {
             }
             goal = orderInQueue.position;
         }
+        System.out.println("]");
+
         if(distanceForThisOrder == 0)
             return -1;
 

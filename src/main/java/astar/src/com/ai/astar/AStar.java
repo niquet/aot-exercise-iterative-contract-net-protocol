@@ -64,8 +64,8 @@ public class AStar {
         while (!isEmpty(openList)) {
             Node currentNode = openList.poll();
             closedSet.add(currentNode);
-            //if (currentNode.equals(finalNode)) {
-            if (currentNode.getRow() == row && currentNode.getCol() == col) {
+            if (currentNode.equals(finalNode)) {
+            //if (currentNode.getRow() == row && currentNode.getCol() == col) {
                 return getPath(currentNode);
             } else {
                 addAdjacentNodes(currentNode);
