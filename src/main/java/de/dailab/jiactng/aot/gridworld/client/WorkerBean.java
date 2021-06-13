@@ -36,8 +36,8 @@ public class WorkerBean extends AbstractAgentBean {
             int p2 = aStarDistance(position, o2.position);
             //int p1 = position.distance(o1.position);
             //int p2 = position.distance(o2.position);
-            if (p1 < p2) return 1;
-            if (p1 > p2) return -1;
+            if (p1 < p2) return -1;
+            if (p1 > p2) return 1;
             return 0;
         }
     };
@@ -113,6 +113,7 @@ public class WorkerBean extends AbstractAgentBean {
                 canOrderBeChanged = false;
 
                 sendMessage(orderToAddress.get(priorityQueue.peek()), move);
+                System.out.println("POSITION = " + position);
             }
 
             WorkerMessage move = new WorkerMessage();
@@ -120,9 +121,10 @@ public class WorkerBean extends AbstractAgentBean {
 
                 System.out.println("WORKER " + workerIdForServer + " CURRENTLY PROCESSING ORDER: " + handleOrder.id);
 
-                aStarUpdate(position, handleOrder.position);
+                aStar(position, handleOrder.position);
             }
 
+            aStar(position, handleOrder.position);
             Position nextMove = getNextMove();
             if (nextMove != null) {
                 move.action = getMoveAction(position, nextMove);
@@ -131,6 +133,7 @@ public class WorkerBean extends AbstractAgentBean {
                 move.workerId = workerIdForServer;
 
                 sendMessage(orderToAddress.get(handleOrder), move);
+                System.out.println("POSITION = " + position);
             }
 
         }
@@ -173,6 +176,7 @@ public class WorkerBean extends AbstractAgentBean {
                     acoConfirm.gameId = gameId;
 
                     sendMessage(broker, acoConfirm);
+                    System.out.println("POSITION = " + position);
                     time = 0;
 
                     log.info("WORKER RECEIVED " + acoMessage.toString());
@@ -212,6 +216,7 @@ public class WorkerBean extends AbstractAgentBean {
                     }
 
                     sendMessage(broker, assignOrderConfirm);
+                    System.out.println("POSITION = " + position);
                     return;
 
                 }
@@ -248,12 +253,14 @@ public class WorkerBean extends AbstractAgentBean {
                         //System.out.println("PrioQueue von " + workerIdForServer + " = " + priorityQueue.toString());
                         //System.out.println("PrioQueueForBidding von " + workerIdForServer + " = " + priorityQueueForBidding.toString());
                         sendMessage(broker, auctionResponse);
+                        System.out.println("POSITION = " + position);
                     } else {
                         AuctionMessage sendAgain = new AuctionMessage();
                         sendAgain.orderId = auctionMessage.orderId;
                         sendAgain.deadline = auctionMessage.deadline;
                         sendAgain.orderPosition = auctionMessage.orderPosition;
                         sendMessage(broker, sendAgain);
+                        System.out.println("POSITION = " + position);
                     }
                 }
 
@@ -309,12 +316,14 @@ public class WorkerBean extends AbstractAgentBean {
                         //System.out.println("PrioQueue von " + workerIdForServer + " = " + priorityQueue.toString());
                         //System.out.println("PrioQueueForBidding von " + workerIdForServer + " = " + priorityQueueForBidding.toString());
                         sendMessage(broker, auctionResponse);
+                        System.out.println("POSITION = " + position);
                     } else {
                         AuctionMessage sendAgain = new AuctionMessage();
                         sendAgain.orderId = auctionMessage.orderId;
                         sendAgain.deadline = auctionMessage.deadline;
                         sendAgain.orderPosition = auctionMessage.orderPosition;
-                        sendMessage(broker, auctionMessage);
+                        sendMessage(broker, sendAgain);
+                        System.out.println("POSITION = " + position);
                     }
 
                 }
@@ -357,6 +366,7 @@ public class WorkerBean extends AbstractAgentBean {
                     }
 
                     sendMessage(broker, answer);
+                    System.out.println("POSITION = " + position);
                 }
 
                 if (payload instanceof DefinitivRejectMessage) {
@@ -409,6 +419,7 @@ public class WorkerBean extends AbstractAgentBean {
                                 obstacleUpdate.position = denoteObstacle(lastMove);
                                 obstacleUpdate.workerAgentId = thisAgent.getAgentId();
                                 sendMessage(workerAddress, obstacleUpdate);
+                                System.out.println("POSITION = " + position);
                             }
 
                         }
@@ -428,7 +439,7 @@ public class WorkerBean extends AbstractAgentBean {
                     }
                     obstacles.add(((ObstacleUpdate) payload).position);
                     if (handleOrder != null) {
-                        aStarUpdate(position, handleOrder.position);
+                        aStar(position, handleOrder.position);
                     }
 
 
@@ -541,7 +552,7 @@ public class WorkerBean extends AbstractAgentBean {
         if (path != null && path.size() > 0) {
             Position move = new Position(path.get(0).getRow(), path.get(0).getCol());
 
-            path.remove(path.get(0));
+            //path.remove(path.get(0));
             return move;
         }
         return null;
@@ -563,7 +574,7 @@ public class WorkerBean extends AbstractAgentBean {
         if (x == 1) return WorkerAction.EAST;
         if (y == -1) return WorkerAction.NORTH;
         if (y == 1) return WorkerAction.SOUTH;
-        return null;
+        return WorkerAction.ORDER;
     }
 
     /**
@@ -578,18 +589,18 @@ public class WorkerBean extends AbstractAgentBean {
 
         int[][] obsts = new int[obstacles.size()][2];
         int i = 0;
-        for (Position obs : obstacles) {
+        for (Position obs : this.obstacles) {
             obsts[i][0] = obs.x;
             obsts[i][1] = obs.y;
             i++;
         }
-        astar.setBlocks(obsts);
+        this.astar.setBlocks(obsts);
 
-        path = astar.findPath(initialNode, finalNode);
+        this.path = this.astar.findPath(initialNode, finalNode);
         if (path.size() > 1) {
             path.remove(path.get(0));
         }
-        System.out.println("PATH: " + path.toString());
+        //System.out.println("PATH: " + path.toString());
     }
 
     /**
@@ -632,9 +643,10 @@ public class WorkerBean extends AbstractAgentBean {
         }
         //int distance = astar.findPath(initialNode, finalNode).size() - 1;
         aStar(start, target);
-        int distance = astar.findPath(initialNode, finalNode).size() - 1;
+        //aStarUpdate(start, target);
+        int distance = this.path.size();
 
-        System.out.println(String.format("DISTANCE BETWEEN : (%d, %d) and (%d, %d) is " + distance, start.x, start.y, target.x, target.y));
+        //System.out.println(String.format("DISTANCE BETWEEN : (%d, %d) and (%d, %d) is " + distance, start.x, start.y, target.x, target.y));
 
         return distance;
     }
@@ -735,12 +747,12 @@ public class WorkerBean extends AbstractAgentBean {
             System.out.println(orderInQueue.id + ",");
             distance = aStarDistance(goal, orderInQueue.position) + 1;
             zeit += distance;
-            if (zeit > orderInQueue.deadline) {
-
-                return -1;
-            }
             if (order.id.equals(orderInQueue.id)) {
                 distanceForThisOrder = zeit;
+                return distanceForThisOrder;
+            }
+            if (zeit > orderInQueue.deadline) {
+                return -1;
             }
             goal = orderInQueue.position;
         }
