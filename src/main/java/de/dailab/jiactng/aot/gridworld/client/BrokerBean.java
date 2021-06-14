@@ -61,12 +61,12 @@ public class BrokerBean extends AbstractAgentBean {
 		/* TODO */
 		log.info("running broker bean...");
 		IAgentDescription serverAgent = thisAgent.searchAgent(new AgentDescription(
-			null,
-			"ServerAgent",
-			null,
-			null,
-			null,
-			null
+				null,
+				"ServerAgent",
+				null,
+				null,
+				null,
+				null
 		));
 
 		if (serverAgent != null) {
@@ -75,7 +75,7 @@ public class BrokerBean extends AbstractAgentBean {
 			if (!isGameStarted) {
 				StartGameMessage startGameMessage = new StartGameMessage();
 				startGameMessage.brokerId = thisAgent.getAgentId();
-				startGameMessage.gridFile = "/grids/grids/05_2.grid";
+				startGameMessage.gridFile = "/grids/27_2.grid";
 				sendMessage(server, startGameMessage);
 
 				this.isGameStarted = true;
@@ -112,11 +112,11 @@ public class BrokerBean extends AbstractAgentBean {
 				 */
 				ArrayList<ICommunicationAddress> workerAddressList = new ArrayList<>();
 
-				for (IAgentDescription agentDescription: agentDescriptionList) {
+				for (IAgentDescription agentDescription : agentDescriptionList) {
 					workerAddressList.add(agentDescription.getMessageBoxAddress());
 				}
 
-				for(Worker worker: startGameResponse.initialWorkers) {
+				for (Worker worker : startGameResponse.initialWorkers) {
 
 					WorkerInformation workerInformation = new WorkerInformation();
 					workerInformation.workerId = worker.id;
@@ -147,12 +147,12 @@ public class BrokerBean extends AbstractAgentBean {
 
 				done = true;
 
-				for(Order order : currentOrders){
-					for (Worker worker: initialWorkers) {
+				for (Order order : currentOrders) {
+					for (Worker worker : initialWorkers) {
 						AuctionMessage startAuction = new AuctionMessage();
 						startAuction.orderId = order.id;
-						startAuction.deadline =  order.deadline;
-						startAuction.orderPosition =  order.position;
+						startAuction.deadline = order.deadline;
+						startAuction.orderPosition = order.position;
 						sendMessage(agentDescriptionList.get(initialWorkers.indexOf(worker)).getMessageBoxAddress(), startAuction);
 					}
 				}
@@ -202,18 +202,20 @@ public class BrokerBean extends AbstractAgentBean {
 			}
 
 			// if new order arrives
-			if(payload instanceof OrderMessage){
+			if (payload instanceof OrderMessage) {
 				OrderMessage orderMessage = (OrderMessage) message.getPayload();
 				currentOrders.add(orderMessage.order);
+				if(time != orderMessage.order.created) time = orderMessage.order.created;
 				// start ggf. neue Auktion -> Turnpenalty, deadline, profit berücksichtigen, evtl. auch andere Orders
 
 				// TODO aktuell senden wir immer eine start auction message, mit der unveränderten deadline
 				StartAuctionMessage startAuction = new StartAuctionMessage();
 				startAuction.orderId = orderMessage.order.id;
-				startAuction.deadline =  orderMessage.order.deadline;
-				startAuction.orderPosition =  orderMessage.order.position;
+				startAuction.deadline = orderMessage.order.deadline;
+				startAuction.orderPosition = orderMessage.order.position;
+				startAuction.orderCreated = orderMessage.order.created;
 				Orders.put(orderMessage.order.id, orderMessage.order);
-				if(done) {
+				if (done) {
 					for (Worker worker : this.initialWorkers) {
 						sendMessage(agentDescriptionList.get(initialWorkers.indexOf(worker)).getMessageBoxAddress(), startAuction);
 					}
@@ -221,16 +223,17 @@ public class BrokerBean extends AbstractAgentBean {
 				// TODO ggf. modifikator an deadline anbringen -> zweites Angebot an Auction Response anbinden
 			}
 
-			if (payload instanceof AuctionResponse){
+			if (payload instanceof AuctionResponse) {
 				/* Worker Angebote kommen an */
 
 				AuctionResponse auctionResponse = (AuctionResponse) message.getPayload();
 
 				/* Wenn Angebot eingeht, mit bisherigem BestOffer vergleichen */
-				if(auctionResponse.status == Result.SUCCESS) { // sichergehen, dass in der Antwort auch ein Gebot ist
-					if(Orders.get(auctionResponse.orderId).value - auctionResponse.deadlineOffer * Orders.get(auctionResponse.orderId).turnPenalty > 0) { // Broker maximiert Reward, daher immer testen ob der erwartete Reward aus dem Offer >0 ist
+				if (auctionResponse.status == Result.SUCCESS) { // sichergehen, dass in der Antwort auch ein Gebot ist
+					if (Orders.get(auctionResponse.orderId).value - auctionResponse.deadlineOffer * Orders.get(auctionResponse.orderId).turnPenalty > 0) { // Broker maximiert Reward, daher immer testen ob der erwartete Reward aus dem Offer >0 ist
 						if (bestOffers.get(auctionResponse.orderId) == null || auctionResponse.deadlineOffer < bestOffers.get(auctionResponse.orderId).deadlineOffer) {
-							if (bestOffers.get(auctionResponse.orderId) != null) bestOffers.remove(auctionResponse.orderId);
+							if (bestOffers.get(auctionResponse.orderId) != null)
+								bestOffers.remove(auctionResponse.orderId);
 							bestOffers.put(auctionResponse.orderId, auctionResponse);
 							DefinitivBidMessage bidMessage = new DefinitivBidMessage();
 							bidMessage.orderId = auctionResponse.orderId;
@@ -238,31 +241,34 @@ public class BrokerBean extends AbstractAgentBean {
 							bidMessage.orderPosition = Orders.get(auctionResponse.orderId).position;
 							/* If accepted bid put order in queue (new queue??)*/
 							sendMessage(auctionResponse.sender, bidMessage);
+							AuctionMessage startAuction = new AuctionMessage();
+							startAuction.orderId = auctionResponse.orderId;
+							startAuction.deadline = this.Orders.get(auctionResponse.orderId).deadline;
+							startAuction.orderPosition = this.Orders.get(auctionResponse.orderId).position;
+							startAuction.orderCreated = this.Orders.get(auctionResponse.orderId).created;
+							sendMessage(message.getSender(), startAuction);
 						} else {
 							AuctionMessage startAuction = new AuctionMessage();
 							startAuction.orderId = auctionResponse.orderId;
 							startAuction.deadline = this.Orders.get(auctionResponse.orderId).deadline;
 							startAuction.orderPosition = this.Orders.get(auctionResponse.orderId).position;
+							startAuction.orderCreated = this.Orders.get(auctionResponse.orderId).created;
 							sendMessage(message.getSender(), startAuction);
 						}
 					}
 				} else {
-					/*
-					DefinitivRejectMessage rejectMessage = new DefinitivRejectMessage();
-					rejectMessage.order = this.Orders.get(auctionResponse.orderId);
-					sendMessage(auctionResponse.sender, rejectMessage);
-					*/
 					AuctionMessage startAuction = new AuctionMessage();
 					startAuction.orderId = auctionResponse.orderId;
 					startAuction.deadline = this.Orders.get(auctionResponse.orderId).deadline;
 					startAuction.orderPosition = this.Orders.get(auctionResponse.orderId).position;
+					startAuction.orderCreated = this.Orders.get(auctionResponse.orderId).created;
 					sendMessage(message.getSender(), startAuction);
 
 				}
 
 				/* server deadline, wenn die Zeit vorbei is wollen wir immer verfallen lassen, oder den Worker mit bestem Angebot zuweisen */
 				for (Order order : currentOrders) {
-					if(auctionResponse.orderId.equals(order.id)) {
+					if (auctionResponse.orderId.equals(order.id)) {
 						acceptProposal(order);
 						break;
 					}
@@ -273,20 +279,22 @@ public class BrokerBean extends AbstractAgentBean {
 
 			}
 
-			if(payload instanceof DefinitivBidMessage){
+			if (payload instanceof DefinitivBidMessage) {
 				DefinitivBidMessage bid = (DefinitivBidMessage) message.getPayload();
 
-				if(bid.status == Result.SUCCESS){
-					this.Orders.get(bid.orderId).deadline = bid.deadlineOffer;
-				} else {
-					if(bestOffers.get(bid.orderId).sender.equals(message.getSender())) bestOffers.remove(bid.orderId);
-					AuctionMessage startAuction = new AuctionMessage();
-					startAuction.orderId = bid.orderId;
-					startAuction.deadline = Orders.get(bid.orderId).deadline;
-					startAuction.orderPosition = this.Orders.get(bid.orderId).position;
-					sendMessage(message.getSender(), startAuction);
-				}
+				if (bid.status == Result.SUCCESS) {
+					this.Orders.get(bid.orderId).deadline = bid.deadlineOffer+3;
+			} else {
+				if (bid.deadlineOffer > this.Orders.get(bid.orderId).deadline || bid.deadlineOffer == -1)
+					bestOffers.remove(bid.orderId);
 			}
+				AuctionMessage startAuction = new AuctionMessage();
+				startAuction.orderId = bid.orderId;
+				startAuction.deadline = Orders.get(bid.orderId).deadline;
+				startAuction.orderPosition = this.Orders.get(bid.orderId).position;
+				startAuction.orderCreated = this.Orders.get(bid.orderId).created;
+				sendMessage(message.getSender(), startAuction);
+		}
 
 			if(payload instanceof AssignOrderConfirm){
 				AssignOrderConfirm orderConfirm = (AssignOrderConfirm) message.getPayload();

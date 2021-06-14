@@ -1,0 +1,78 @@
+210613-222423
+GAME No. 1908112820
+TURN 101/100
+Brokers
+B(a-4759ff293444, workers=[W(w1, Pos(18, 9), 0), W(w2, Pos(16, 14), 1), W(w3, Pos(4, 0), 0), W(w4, Pos(4, 17), 0), W(w5, Pos(16, 19), 0)], taken=[], completed=[o2], failed=[])
+Orders
+O(o1, Pos(11, 1), cr=0, dl=20, cp=-1, val=20, tp=1)
+O(o2, Pos(16, 14), cr=0, dl=20, cp=10, val=20, tp=1)
+O(o3, Pos(9, 0), cr=5, dl=25, cp=-1, val=20, tp=1)
+O(o4, Pos(9, 6), cr=11, dl=25, cp=-1, val=20, tp=1)
+O(o5, Pos(0, 15), cr=20, dl=40, cp=-1, val=20, tp=1)
+O(o6, Pos(7, 19), cr=20, dl=40, cp=-1, val=20, tp=1)
+O(o7, Pos(19, 16), cr=33, dl=51, cp=-1, val=20, tp=1)
+O(o8, Pos(2, 9), cr=40, dl=63, cp=-1, val=20, tp=1)
+O(o9, Pos(18, 4), cr=45, dl=68, cp=-1, val=20, tp=1)
+O(o10, Pos(13, 17), cr=62, dl=84, cp=-1, val=20, tp=1)
+O(o11, Pos(19, 10), cr=64, dl=90, cp=-1, val=20, tp=1)
+O(o12, Pos(0, 19), cr=90, dl=2147483647, cp=-1, val=20, tp=1)
+	.	.	.	.	w3	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	#	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	#	#	#	#	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	#	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	#	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	w1	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	#	.
+	.	.	.	.	#	#	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	w2	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.	.	#	#	#	.	.	.	.	.
+	.	.	.	.	w4	.	.	.	.	.	.	.	#	.	.	.	.	.	.	.
+	#	#	.	.	.	.	.	.	.	.	.	.	#	#	#	.	.	.	.	.
+	o12	#	.	.	.	.	.	.	.	.	.	.	.	.	.	.	w5	.	.	.
+
+210613-222240: Sending StartGameResponse(game=1908112820, size=Pos(20, 20), workers=[W(w1, Pos(18, 9), 0), W(w2, Pos(10, 13), 0), W(w3, Pos(4, 0), 0), W(w4, Pos(4, 17), 0), W(w5, Pos(16, 19), 0)], obstacles: 20)
+210613-222241: Sending OrderMessage(game=1908112820, order=O(o1, Pos(11, 1), cr=0, dl=20, cp=-1, val=20, tp=1))
+210613-222241: Sending OrderMessage(game=1908112820, order=O(o2, Pos(16, 14), cr=0, dl=20, cp=-1, val=20, tp=1))
+210613-222243: Received TakeOrderMessage(game=1908112820, order=o2, broker=a-4759ff293444)
+210613-222243: Sending TakeOrderConfirm(game=1908112820, order=o2, broker=a-4759ff293444, SUCCESS)
+210613-222244: Received WorkerMessage(game=1908112820, worker=w2, action=SOUTH)
+210613-222244: Sending WorkerConfirm(game=1908112820, worker=w2, action=SOUTH, SUCCESS)
+210613-222245: Received WorkerMessage(game=1908112820, worker=w2, action=EAST)
+210613-222245: Sending WorkerConfirm(game=1908112820, worker=w2, action=EAST, SUCCESS)
+210613-222246: Sending OrderMessage(game=1908112820, order=O(o3, Pos(9, 0), cr=5, dl=25, cp=-1, val=20, tp=1))
+210613-222246: Received WorkerMessage(game=1908112820, worker=w2, action=EAST)
+210613-222246: Sending WorkerConfirm(game=1908112820, worker=w2, action=EAST, SUCCESS)
+210613-222247: Received WorkerMessage(game=1908112820, worker=w2, action=EAST)
+210613-222247: Sending WorkerConfirm(game=1908112820, worker=w2, action=EAST, SUCCESS)
+210613-222248: Received WorkerMessage(game=1908112820, worker=w2, action=EAST)
+210613-222248: Sending WorkerConfirm(game=1908112820, worker=w2, action=EAST, SUCCESS)
+210613-222249: Received WorkerMessage(game=1908112820, worker=w2, action=EAST)
+210613-222249: Sending WorkerConfirm(game=1908112820, worker=w2, action=EAST, SUCCESS)
+210613-222250: Received WorkerMessage(game=1908112820, worker=w2, action=EAST)
+210613-222250: Sending WorkerConfirm(game=1908112820, worker=w2, action=EAST, SUCCESS)
+210613-222251: Received WorkerMessage(game=1908112820, worker=w2, action=ORDER)
+210613-222251: Sending WorkerConfirm(game=1908112820, worker=w2, action=ORDER, SUCCESS)
+210613-222251: Sending OrderCompleted(game=1908112820, order=o2, SUCCESS, reward=10)
+210613-222252: Sending OrderMessage(game=1908112820, order=O(o4, Pos(9, 6), cr=11, dl=25, cp=-1, val=20, tp=1))
+210613-222301: Sending OrderMessage(game=1908112820, order=O(o5, Pos(0, 15), cr=20, dl=40, cp=-1, val=20, tp=1))
+210613-222301: Sending OrderMessage(game=1908112820, order=O(o6, Pos(7, 19), cr=20, dl=40, cp=-1, val=20, tp=1))
+210613-222314: Sending OrderMessage(game=1908112820, order=O(o7, Pos(19, 16), cr=33, dl=51, cp=-1, val=20, tp=1))
+210613-222321: Sending OrderMessage(game=1908112820, order=O(o8, Pos(2, 9), cr=40, dl=63, cp=-1, val=20, tp=1))
+210613-222326: Sending OrderMessage(game=1908112820, order=O(o9, Pos(18, 4), cr=45, dl=68, cp=-1, val=20, tp=1))
+210613-222343: Sending OrderMessage(game=1908112820, order=O(o10, Pos(13, 17), cr=62, dl=84, cp=-1, val=20, tp=1))
+210613-222345: Sending OrderMessage(game=1908112820, order=O(o11, Pos(19, 10), cr=64, dl=90, cp=-1, val=20, tp=1))
+210613-222412: Sending OrderMessage(game=1908112820, order=O(o12, Pos(0, 19), cr=90, dl=2147483647, cp=-1, val=20, tp=1))
+210613-222423: Sending WorkerScoreMessage(game=1908112820, worker=w1, winner?=false, orders completed=0)
+210613-222423: Sending WorkerScoreMessage(game=1908112820, worker=w2, winner?=true, orders completed=1)
+210613-222423: Sending WorkerScoreMessage(game=1908112820, worker=w3, winner?=false, orders completed=0)
+210613-222423: Sending WorkerScoreMessage(game=1908112820, worker=w4, winner?=false, orders completed=0)
+210613-222423: Sending WorkerScoreMessage(game=1908112820, worker=w5, winner?=false, orders completed=0)
+210613-222423: Sending EndGameMessage(game=1908112820, broker=a-4759ff293444, winner?=true, reward=3,00)
+

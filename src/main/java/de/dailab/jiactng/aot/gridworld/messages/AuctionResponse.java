@@ -15,6 +15,7 @@ public class AuctionResponse extends GameMessage {
 
     /** the order to be performed */
     public String orderId;
+    public Integer orderCreated;
     public Integer deadlineOffer;
     public Result status;
     public ICommunicationAddress sender;

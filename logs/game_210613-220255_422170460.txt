@@ -1,0 +1,58 @@
+210613-220255
+GAME No. 422170460
+TURN 21/20
+Brokers
+B(a-46411814d790, workers=[W(w1, Pos(5, 2), 0), W(w2, Pos(9, 6), 1), W(w3, Pos(4, 4), 1)], taken=[], completed=[o3, o2], failed=[])
+Orders
+O(o1, Pos(2, 5), cr=0, dl=7, cp=-1, val=15, tp=1)
+O(o2, Pos(9, 6), cr=1, dl=15, cp=7, val=15, tp=1)
+O(o3, Pos(4, 4), cr=2, dl=20, cp=7, val=10, tp=0)
+O(o4, Pos(5, 4), cr=2, dl=20, cp=-1, val=10, tp=0)
+	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	w1	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	#	.
+	.	.	.	#	w3	.	.	.	.	#	.
+	.	.	.	#	#	#	#	#	#	#	.
+	.	.	.	.	.	.	.	.	.	w2	.
+	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.
+	.	.	.	.	.	.	.	.	.	.	.
+
+210613-220234: Sending StartGameResponse(game=422170460, size=Pos(11, 11), workers=[W(w1, Pos(5, 2), 0), W(w2, Pos(5, 6), 0), W(w3, Pos(4, 0), 0)], obstacles: 10)
+210613-220234: Sending OrderMessage(game=422170460, order=O(o1, Pos(2, 5), cr=0, dl=7, cp=-1, val=15, tp=1))
+210613-220235: Sending OrderMessage(game=422170460, order=O(o2, Pos(9, 6), cr=1, dl=15, cp=-1, val=15, tp=1))
+210613-220236: Sending OrderMessage(game=422170460, order=O(o3, Pos(4, 4), cr=2, dl=20, cp=-1, val=10, tp=0))
+210613-220236: Sending OrderMessage(game=422170460, order=O(o4, Pos(5, 4), cr=2, dl=20, cp=-1, val=10, tp=0))
+210613-220237: Received TakeOrderMessage(game=422170460, order=o2, broker=a-46411814d790)
+210613-220237: Sending TakeOrderConfirm(game=422170460, order=o2, broker=a-46411814d790, SUCCESS)
+210613-220238: Received WorkerMessage(game=422170460, worker=w2, action=EAST)
+210613-220238: Sending WorkerConfirm(game=422170460, worker=w2, action=EAST, SUCCESS)
+210613-220238: Received WorkerMessage(game=422170460, worker=w3, action=SOUTH)
+210613-220238: Sending WorkerConfirm(game=422170460, worker=w3, action=SOUTH, SUCCESS)
+210613-220238: Received TakeOrderMessage(game=422170460, order=o3, broker=a-46411814d790)
+210613-220238: Sending TakeOrderConfirm(game=422170460, order=o3, broker=a-46411814d790, SUCCESS)
+210613-220239: Received WorkerMessage(game=422170460, worker=w3, action=SOUTH)
+210613-220239: Sending WorkerConfirm(game=422170460, worker=w3, action=SOUTH, SUCCESS)
+210613-220239: Received WorkerMessage(game=422170460, worker=w2, action=EAST)
+210613-220239: Sending WorkerConfirm(game=422170460, worker=w2, action=EAST, SUCCESS)
+210613-220240: Received WorkerMessage(game=422170460, worker=w3, action=SOUTH)
+210613-220240: Sending WorkerConfirm(game=422170460, worker=w3, action=SOUTH, SUCCESS)
+210613-220240: Received WorkerMessage(game=422170460, worker=w2, action=EAST)
+210613-220240: Sending WorkerConfirm(game=422170460, worker=w2, action=EAST, SUCCESS)
+210613-220241: Received WorkerMessage(game=422170460, worker=w3, action=SOUTH)
+210613-220241: Sending WorkerConfirm(game=422170460, worker=w3, action=SOUTH, SUCCESS)
+210613-220241: Received WorkerMessage(game=422170460, worker=w2, action=EAST)
+210613-220241: Sending WorkerConfirm(game=422170460, worker=w2, action=EAST, SUCCESS)
+210613-220242: Received WorkerMessage(game=422170460, worker=w3, action=ORDER)
+210613-220242: Sending WorkerConfirm(game=422170460, worker=w3, action=ORDER, SUCCESS)
+210613-220242: Sending OrderCompleted(game=422170460, order=o3, SUCCESS, reward=10)
+210613-220242: Received WorkerMessage(game=422170460, worker=w2, action=ORDER)
+210613-220242: Sending WorkerConfirm(game=422170460, worker=w2, action=ORDER, SUCCESS)
+210613-220242: Sending OrderCompleted(game=422170460, order=o2, SUCCESS, reward=9)
+210613-220255: Sending WorkerScoreMessage(game=422170460, worker=w1, winner?=false, orders completed=0)
+210613-220255: Sending WorkerScoreMessage(game=422170460, worker=w2, winner?=true, orders completed=1)
+210613-220255: Sending WorkerScoreMessage(game=422170460, worker=w3, winner?=false, orders completed=1)
+210613-220255: Sending EndGameMessage(game=422170460, broker=a-46411814d790, winner?=true, reward=11,00)
+

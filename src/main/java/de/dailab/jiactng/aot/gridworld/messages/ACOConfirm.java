@@ -22,7 +22,7 @@ public class ACOConfirm extends GameMessage {
 
     @Override
     public String toString() {
-        return String.format("PositionMessage(game=%d, workerId=%s, state=%s)", gameId, workerAgentId, state);
+        return String.format("ACOConfirm(game=%d, workerId=%s, state=%s)", gameId, workerAgentId, state);
     }
 
 }

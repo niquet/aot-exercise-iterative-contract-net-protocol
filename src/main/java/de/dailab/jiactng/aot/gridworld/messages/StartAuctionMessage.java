@@ -13,6 +13,7 @@ public class StartAuctionMessage extends GameMessage {
     /** the order to be performed */
     public String orderId;
     public Integer deadline;
+    public Integer orderCreated;
     public Position orderPosition;
 
 
